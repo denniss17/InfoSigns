@@ -1,0 +1,7 @@
+general:
+  firstline: '[SignInfo]'
+messages:
+  sign_creation_success: '&8[&9SignInfo&8] &7You created a info sign of type {type}'
+  sign_creation_type_unknown: '&8[&9SignInfo&8] &cUnknown info sign type'
+  sign_creation_failed: '&8[&9SignInfo&8] &cSomething went wrong on creating the info sign'
+  sign_broken: '&8[&9SignInfo&8] &7Info sign removed'
