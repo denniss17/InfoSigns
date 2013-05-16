@@ -32,8 +32,9 @@ public class SignManager {
 	}
 
 	public void removeSign(InfoSignBase infoSign) {
-		// TODO Auto-generated method stub
-		
+		infoSign.destroy();
+		get().set(String.valueOf(infoSign.id), null);
+		save();
 	}
 
 	public InfoSignBase getInfoSign(int id){
@@ -76,6 +77,7 @@ public class SignManager {
 		InfoSignBase infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
 		
 		if(infoSign!=null){
+			infoSign.id = id;
 			if(options!=null){
 				infoSign.setData(options);
 			}

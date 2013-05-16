@@ -103,11 +103,11 @@ public class AddonLoader {
 	private void checkLayouts(YamlConfiguration addonConfiguration, String signtype) {
 		for(String key : addonConfiguration.getConfigurationSection(signtype + ".layouts").getKeys(false)){
 			if(!SignInfo.layoutManager.exists(signtype, key)){
+				String line0 = addonConfiguration.getString(signtype + ".layouts." + key + ".0");
 				String line1 = addonConfiguration.getString(signtype + ".layouts." + key + ".1");
 				String line2 = addonConfiguration.getString(signtype + ".layouts." + key + ".2");
 				String line3 = addonConfiguration.getString(signtype + ".layouts." + key + ".3");
-				String line4 = addonConfiguration.getString(signtype + ".layouts." + key + ".4");
-				SignInfo.layoutManager.setLayout(signtype, key, line1, line2, line3, line4);
+				SignInfo.layoutManager.setLayout(signtype, key, line0, line1, line2, line3);
 			}
 		}
 			
@@ -117,17 +117,6 @@ public class AddonLoader {
 	public File[] listAddons(){
 		File addonsDir = new File(SignInfo.instance.getDataFolder(), AddonLoader.addonFolder);
 		File[] files = addonsDir.listFiles(new jarFilter());
-		for(File file : files){
-			SignInfo.instance.getLogger().info(file.getPath());
-			SignInfo.instance.getLogger().info(file.getName());
-			SignInfo.instance.getLogger().info(file.toURI().toString());
-			try {
-				SignInfo.instance.getLogger().info(file.toURI().toURL().toString());
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		return files;
 	}
 	

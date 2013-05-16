@@ -19,6 +19,7 @@ public class TestSign extends InfoSignBase {
 
 	@Override
 	public boolean initialize() {
+		updateSign();
 		return true;
 	}
 
