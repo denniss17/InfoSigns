@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -27,16 +25,13 @@ public class AddonLoader {
 	}
 	
 	public void test(){
-		Set<Class<? extends InfoSignBase>> classes = loadAddons();
-		SignInfo.instance.getLogger().info("Loaded classes:");
-		for(Class<? extends InfoSignBase> clazz : classes){
-			SignInfo.instance.getLogger().info(clazz.getSimpleName());
-		}
+		int count = loadAddons();
+		SignInfo.instance.getLogger().info("Loaded signs: " + count);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<Class<? extends InfoSignBase>> loadAddons(){
-		Set<Class<? extends InfoSignBase>> result = new HashSet<Class<? extends InfoSignBase>>();
+	public int loadAddons(){
+		int count = 0;
 		Logger logger = SignInfo.instance.getLogger();
 		File[] addonFiles = listAddons();
 		
@@ -70,12 +65,15 @@ public class AddonLoader {
 					}
 					Class<?> clazz = loader.loadClass(classpath);
 					if(clazz.getSuperclass().equals(InfoSignBase.class)){
-						result.add((Class<? extends InfoSignBase>) clazz);					
+						// Success!
+						SignInfo.instance.addInfoSignType(signtype, (Class<? extends InfoSignBase>) clazz);
+						checkLayouts(addonConfiguration, signtype);	
+						count++;									
 					}else{
 						logger.warning("Class " + clazz.getSimpleName() + " doesn't extend the right class (addon: " + file.getName() + ")");
 					}
 					
-					checkLayouts(addonConfiguration, signtype);
+					
 				}
 				
 				// Cleanup
@@ -99,7 +97,7 @@ public class AddonLoader {
 			}
 		}
 		
-		return result;
+		return count;
 	}
 	
 	private void checkLayouts(YamlConfiguration addonConfiguration, String signtype) {

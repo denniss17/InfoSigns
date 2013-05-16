@@ -55,6 +55,10 @@ public class SignInfo extends JavaPlugin {
 		return infoSignTypes;
 	}
 	
+	public void addInfoSignType(String signtype, Class<? extends InfoSignBase> clazz) {
+		infoSignTypes.put(signtype, clazz);		
+	}
+
 	public void registerListener(Listener listener){
 		this.getServer().getPluginManager().registerEvents(listener, this);
 	}
