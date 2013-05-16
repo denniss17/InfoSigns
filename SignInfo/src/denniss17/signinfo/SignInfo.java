@@ -29,10 +29,12 @@ public class SignInfo extends JavaPlugin {
 		manager = new SignManager();
 		layoutManager = new LayoutManager();
 		
-		File addonsfolder = new File(getDataFolder(), "addons");
+		File addonsfolder = new File(getDataFolder(), AddonLoader.addonFolder);
 		if(!addonsfolder.exists()){
 			addonsfolder.mkdir();
-		}		
+		}
+		
+		new AddonLoader().test();
 		
 		// Add basic signtypes
 		infoSignTypes.put("time", TimeInfoSign.class);

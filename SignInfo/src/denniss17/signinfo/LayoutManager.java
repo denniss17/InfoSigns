@@ -2,10 +2,6 @@ package denniss17.signinfo;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.MemorySection;
@@ -29,45 +25,20 @@ public class LayoutManager {
 		result[3] = get().getString(path+"3");
 		return result;
 	}
-	
-	public void checkLayout()
-	
-	/*public void loadLayoutFromClasses(){
-		 Map<String, Class<? extends InfoSignBase>> infoSignTypes = SignInfo.instance.getInfoSignTypes();
-		 
-		 for(Entry<String, Class<? extends InfoSignBase>> entry : infoSignTypes.entrySet()){
-			 
-			 
-			 try {
-				Method method = infoSign.getMethod("getDefaultLayouts");
-				try {
-					Object result = method.invoke(null, (Object[])null);
-					if(result instanceof Map<?, ?>){
-						
-					}
-					
-					Map<String, String[]> defaultLayout = (Map<String, String[]>)result;
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		 }
-		 
-	}*/
-	
+
+	public void setLayout(String signtype, String subtype, String line0, String line1, String line2, String line3) {
+		String path = signtype + "." + subtype + ".";
+		get().set(path+"0", line0);
+		get().set(path+"1", line1);
+		get().set(path+"2", line2);
+		get().set(path+"3", line3);
+		save();		
+	}
+
+	public boolean exists(String signtype, String subtype) {
+		return get().contains(signtype + "." + subtype);
+	}
+
 	protected void reload() {
 		if (configFile == null) {
 			configFile = new File(SignInfo.instance.getDataFolder(), "layout.yml");
