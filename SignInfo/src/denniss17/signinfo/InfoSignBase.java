@@ -24,6 +24,14 @@ public abstract class InfoSignBase {
 	public abstract boolean initialize();
 	
 	public abstract boolean destroy();
+	
+	public String[] getLayout(){
+		return SignInfo.layoutManager.getLayout(type);
+	}
+	
+	public String[] getLayout(String subtype){
+		return SignInfo.layoutManager.getLayout(type, subtype);
+	}
 
 	public Sign getSign() {
 		return sign;

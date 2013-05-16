@@ -12,6 +12,7 @@ public class TestSign extends InfoSignBase {
 
 	@Override
 	public void updateSign() {
+		getLayout();
 		sign.setLine(2, "test");
 		sign.update();
 	}
