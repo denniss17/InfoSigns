@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.block.Sign;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -113,5 +115,17 @@ public class SignInfo extends JavaPlugin {
 		
 		getLogger().info("E: Unable to make instance");
 		return null;
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String commandlabel, String[] args) {
+		String types = "Available types: &7";
+		for(String type : infoSignTypes.keySet()){
+			types += type + ", ";
+		}
+		Messager.send(sender, types);
+		
+		
+		return true;		
 	}
 }

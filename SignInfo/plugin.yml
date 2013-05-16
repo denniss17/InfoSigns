@@ -4,19 +4,22 @@ version: 0.1.0
 author: Denniss17
 description: Create Info Signs
 softdepend: [Vault]
-#commands:
-#   title:
-#      description: Manage your title
-#      usage: /<command>
-#      permission: ds_title.title
+commands:
+   signinfo:
+      description: Main SignInfo command
+      usage: /<command>
+      permission: signinfo.signinfo
+      aliases: [si]
 permissions:
    signinfo.create.*:
       description: Permission to create all sign types.
       default: op
-#      children:
-#         ds_title.player: true
-#   ds_title.player:
-#      description: Gives access to all the player commands
-#      default: true
-#      children:
-#        ds_title.title: true
+   signinfo.signinfo:
+      description: Permission to use the command
+      default: op
+   signinfo.*:
+      description: All permissions
+      default: op
+      children:
+         signinfo.signinfo: true
+         signinfo.create.*: true
