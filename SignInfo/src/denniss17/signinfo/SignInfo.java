@@ -70,7 +70,7 @@ public class SignInfo extends JavaPlugin {
 	}
 
 	public InfoSignBase createNewSign(Sign sign, String type, String arg1, String arg2){
-		getLogger().info("Trying to create sign " + type + " (" + arg1 + "," + arg2 + ")");
+		//getLogger().info("Trying to create sign " + type + " (" + arg1 + "," + arg2 + ")");
 		
 		Class<? extends InfoSignBase> signClass = infoSignTypes.get(type);
 		
@@ -97,7 +97,7 @@ public class SignInfo extends JavaPlugin {
 		
 		try {
 			InfoSignBase infoSign = constructor.newInstance(sign, type, arg1, arg2);
-			getLogger().info("Success!");
+			//getLogger().info("Success!");
 			return infoSign;
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
