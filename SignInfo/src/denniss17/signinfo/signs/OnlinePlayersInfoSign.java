@@ -1,7 +1,5 @@
 package denniss17.signinfo.signs;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.bukkit.World;
 import org.bukkit.block.Sign;
@@ -24,31 +22,19 @@ public class OnlinePlayersInfoSign extends InfoSignBase implements Listener {
 	public void updateSign() {
 		if(arg1!=null){
 			World world = SignInfo.instance.getServer().getWorld(arg1);
-			sign.setLine(1, "Online Players");
-			sign.setLine(2, arg1);
-			if(world!=null){
-				sign.setLine(3, String.valueOf(world.getPlayers().size()));
-			}else{
-				sign.setLine(3, "Doesn't exist");
-			}
+			String[] layout = this.getLayout("world");
+			sign.setLine(0, layout[0].replace("{world}", arg1).replace("{count}", world==null ? "Error" : String.valueOf(world.getPlayers().size())));
+			sign.setLine(1, layout[1].replace("{world}", arg1).replace("{count}", world==null ? "Error" : String.valueOf(world.getPlayers().size())));
+			sign.setLine(2, layout[2].replace("{world}", arg1).replace("{count}", world==null ? "Error" : String.valueOf(world.getPlayers().size())));
+			sign.setLine(3, layout[3].replace("{world}", arg1).replace("{count}", world==null ? "Error" : String.valueOf(world.getPlayers().size())));
 		}else{
-			sign.setLine(1, "Online Players");
-			sign.setLine(3, 
-					String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length) + 
-					"/" + 
-					String.valueOf(SignInfo.instance.getServer().getMaxPlayers())
-				);
+			String[] layout = this.getLayout();
+			sign.setLine(0, layout[0].replace("{count}", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length)).replace("{max}", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())));
+			sign.setLine(1, layout[1].replace("{count}", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length)).replace("{max}", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())));
+			sign.setLine(2, layout[2].replace("{count}", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length)).replace("{max}", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())));
+			sign.setLine(3, layout[3].replace("{count}", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length)).replace("{max}", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())));
 		}
 		sign.update();
-	}
-	
-	public static Map<String, String[]> getDefaultLayouts() {
-		Map<String, String[]> result = new HashMap<String, String[]>();
-		String[] main = {"&8[&9SignInfo&8]", "Online Players:", "{count}/{max}", null};
-		String[] worldspecific = {"&8[&9SignInfo&8]", "Players in", "{world}", "{count}"};
-		result.put("main", main);
-		result.put("worldspecific", worldspecific);
-		return result;
 	}
 
 	@Override

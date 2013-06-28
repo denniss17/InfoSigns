@@ -16,7 +16,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class AddonLoader {
 	public static final String addonFolder = "addons";
 	
-	class jarFilter implements FilenameFilter{
+	static class jarFilter implements FilenameFilter{
 		@Override
 		public boolean accept(File dir, String name) {
 			return name.endsWith(".jar");
@@ -24,13 +24,8 @@ public class AddonLoader {
 		
 	}
 	
-	public void test(){
-		int count = loadAddons();
-		SignInfo.instance.getLogger().info("Loaded signs: " + count);
-	}
-	
 	@SuppressWarnings("unchecked")
-	public int loadAddons(){
+	public static int loadAddons(){
 		int count = 0;
 		Logger logger = SignInfo.instance.getLogger();
 		File[] addonFiles = listAddons();
@@ -67,6 +62,7 @@ public class AddonLoader {
 					if(clazz.getSuperclass().equals(InfoSignBase.class)){
 						// Success!
 						SignInfo.instance.addInfoSignType(signtype, (Class<? extends InfoSignBase>) clazz);
+						// Check if layout is in layouts.yml
 						checkLayouts(addonConfiguration, signtype);	
 						count++;									
 					}else{
@@ -100,9 +96,10 @@ public class AddonLoader {
 		return count;
 	}
 	
-	private void checkLayouts(YamlConfiguration addonConfiguration, String signtype) {
+	private static void checkLayouts(YamlConfiguration addonConfiguration, String signtype) {
 		for(String key : addonConfiguration.getConfigurationSection(signtype + ".layouts").getKeys(false)){
 			if(!SignInfo.layoutManager.exists(signtype, key)){
+				// Layout is not in layouts.yml => add it
 				String line0 = addonConfiguration.getString(signtype + ".layouts." + key + ".0");
 				String line1 = addonConfiguration.getString(signtype + ".layouts." + key + ".1");
 				String line2 = addonConfiguration.getString(signtype + ".layouts." + key + ".2");
@@ -114,7 +111,7 @@ public class AddonLoader {
 			
 	}
 
-	public File[] listAddons(){
+	public static File[] listAddons(){
 		File addonsDir = new File(SignInfo.instance.getDataFolder(), AddonLoader.addonFolder);
 		File[] files = addonsDir.listFiles(new jarFilter());
 		return files;

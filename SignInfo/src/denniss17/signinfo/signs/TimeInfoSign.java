@@ -1,7 +1,6 @@
 package denniss17.signinfo.signs;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.bukkit.block.Sign;
 import org.bukkit.scheduler.BukkitTask;
@@ -24,17 +23,14 @@ public class TimeInfoSign extends InfoSignBase{
 		int minutes = (6*(ticks%1000))/100;
 		return (hours<10 ? "0" : "") + hours + ":" + (minutes<10 ? "0" : "") + minutes;
 	}
-	
-	public static Map<String, String[]> getDefaultLayouts() {
-		Map<String, String[]> result = new HashMap<String, String[]>();
-		String[] main = {"&8[&9SignInfo&8]", "Time:", "{time}", null};
-		result.put("main", main);
-		return result;
-	}
 
 	@Override
 	public void updateSign() {
-		sign.setLine(2, ticksToHuman((int) sign.getWorld().getTime()));
+		String[] layout = this.getLayout();
+		sign.setLine(0, layout[0].replace("{time}", ticksToHuman((int) sign.getWorld().getTime())));
+		sign.setLine(1, layout[1].replace("{time}", ticksToHuman((int) sign.getWorld().getTime())));
+		sign.setLine(2, layout[2].replace("{time}", ticksToHuman((int) sign.getWorld().getTime())));
+		sign.setLine(3, layout[3].replace("{time}", ticksToHuman((int) sign.getWorld().getTime())));
 		sign.update();
 	}
 

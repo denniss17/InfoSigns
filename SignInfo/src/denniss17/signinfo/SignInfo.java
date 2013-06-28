@@ -37,15 +37,25 @@ public class SignInfo extends JavaPlugin {
 			addonsfolder.mkdir();
 		}
 		
-		new AddonLoader().test();
+		int count = AddonLoader.loadAddons();
+		SignInfo.instance.getLogger().info("Loaded signs: " + count);
 		
 		// Add basic signtypes
 		infoSignTypes.put("time", TimeInfoSign.class);
 		infoSignTypes.put("players", OnlinePlayersInfoSign.class);
 		
+		// Check layouts of basic signstypes
+		if(!layoutManager.exists("players", "default")){
+			layoutManager.setLayout("players", "default", "&8[&9SignInfo&8]", "Online Players:", null, "{count}/{max}");
+		}
+		if(!layoutManager.exists("players", "world")){
+			layoutManager.setLayout("players", "world", "&8[&9SignInfo&8]", "Online Players:", "{world}", "{count}");
+		}
+		if(!layoutManager.exists("time", "default")){
+			layoutManager.setLayout("time", "default", "&8[&9SignInfo&8]", "Time:", "{time}", null);
+		}
+		
 		manager.loadInfoSigns();
-		
-		
 		
 		// Listeners
 		this.getServer().getPluginManager().registerEvents(new SignListener(), this);

@@ -10,6 +10,8 @@ public abstract class InfoSignBase {
 	protected String type;
 	protected String arg1;
 	protected String arg2;
+	private String cachedLayoutType;
+	private String[] cachedLayout;
 	protected Map<String, Object> data;
 
 	public InfoSignBase(Sign sign, String type, String arg1, String arg2){
@@ -26,11 +28,19 @@ public abstract class InfoSignBase {
 	public abstract boolean destroy();
 	
 	public String[] getLayout(){
-		return SignInfo.layoutManager.getLayout(type);
+		if(!cachedLayoutType.equals("default") || cachedLayout==null){
+			cachedLayoutType = "default";
+			cachedLayout = SignInfo.layoutManager.getLayout(type);
+		}
+		return cachedLayout;
 	}
 	
 	public String[] getLayout(String subtype){
-		return SignInfo.layoutManager.getLayout(type, subtype);
+		if(!cachedLayoutType.equals(subtype) || cachedLayout==null){
+			cachedLayoutType = subtype;
+			cachedLayout = SignInfo.layoutManager.getLayout(type, subtype);
+		}
+		return cachedLayout;
 	}
 
 	public Sign getSign() {

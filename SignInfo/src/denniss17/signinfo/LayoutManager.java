@@ -8,21 +8,23 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import denniss17.signinfo.utils.Messager;
+
 public class LayoutManager {
 	private FileConfiguration config = null;
 	private File configFile = null;
 	
 	public String[] getLayout(String type){
-		return getLayout(type, "main");
+		return getLayout(type, "default");
 	}
 	
 	public String[] getLayout(String type, String subtype){		
 		String[] result = new String[4];
 		String path = type + "." + subtype + ".";
-		result[0] = get().getString(path+"0");
-		result[1] = get().getString(path+"1");
-		result[2] = get().getString(path+"2");
-		result[3] = get().getString(path+"3");
+		result[0] = Messager.setTotalStyle(get().getString(path+"0"));
+		result[1] = Messager.setTotalStyle(get().getString(path+"1"));
+		result[2] = Messager.setTotalStyle(get().getString(path+"2"));
+		result[3] = Messager.setTotalStyle(get().getString(path+"3"));
 		return result;
 	}
 
