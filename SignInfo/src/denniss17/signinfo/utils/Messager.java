@@ -1,8 +1,10 @@
-package denniss17.signinfo;
+package denniss17.signinfo.utils;
 
 import java.util.regex.Pattern;
 
 import org.bukkit.command.CommandSender;
+
+import denniss17.signinfo.SignInfo;
 
 public class Messager {
 	protected static Pattern ColorPattern = Pattern.compile("(?i)&([0-9A-F])");

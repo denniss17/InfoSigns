@@ -9,9 +9,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
-import denniss17.signinfo.Messager;
 import denniss17.signinfo.SignInfo;
 import denniss17.signinfo.InfoSignBase;
+import denniss17.signinfo.utils.Messager;
 
 public class SignListener implements Listener {
 	

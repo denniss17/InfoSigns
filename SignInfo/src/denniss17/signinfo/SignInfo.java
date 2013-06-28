@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import denniss17.signinfo.listeners.SignListener;
 import denniss17.signinfo.signs.OnlinePlayersInfoSign;
 import denniss17.signinfo.signs.TimeInfoSign;
+import denniss17.signinfo.utils.Messager;
 
 public class SignInfo extends JavaPlugin {
 	public static SignInfo instance;
