@@ -69,17 +69,17 @@ public class SignManager {
 		String type = get().getString(id + ".type");
 		String arg1 = get().getString(id + ".arg1");
 		String arg2 = get().getString(id + ".arg2");
-		Map<String, Object> options = null;
-		if(get().contains(id + ".options")){
-			options = get().getConfigurationSection(id + ".options").getValues(false);
+		Map<String, Object> data = null;
+		if(get().contains(id + ".data")){
+			data = get().getConfigurationSection(id + ".options").getValues(false);
 		}
 		
 		InfoSignBase infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
 		
 		if(infoSign!=null){
 			infoSign.id = id;
-			if(options!=null){
-				infoSign.setData(options);
+			if(data!=null){
+				infoSign.setData(data);
 			}
 			infoSign.initialize();
 			infoSigns.put(id, infoSign);
@@ -95,7 +95,7 @@ public class SignManager {
 		get().set(id + ".type", signInfoSign.getType());
 		get().set(id + ".arg1", signInfoSign.getFirstArgument());
 		get().set(id + ".arg2", signInfoSign.getSecondArgument());
-		get().set(id + ".options", signInfoSign.getOptions());
+		get().set(id + ".data", signInfoSign.getData());
 		save();
 	}
 

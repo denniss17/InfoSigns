@@ -13,8 +13,8 @@ public class TimeInfoSign extends InfoSignBase{
 
 	public TimeInfoSign(Sign sign, String type, String arg1, String arg2) {
 		super(sign, type, arg1, arg2);
-		options = new HashMap<String, Object>(1);
-		options.put("interval", 16);
+		data = new HashMap<String, Object>(1);
+		data.put("interval", 16);
 	}
 	
 	private BukkitTask timer;
@@ -43,7 +43,7 @@ public class TimeInfoSign extends InfoSignBase{
 		updateSign();
 		int interval;
 		try{
-			interval = Integer.parseInt(options.get("interval").toString());
+			interval = Integer.parseInt(data.get("interval").toString());
 		}catch(NumberFormatException e){
 			interval = 16;
 		}

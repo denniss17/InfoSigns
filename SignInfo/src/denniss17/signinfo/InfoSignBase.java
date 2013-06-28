@@ -10,7 +10,7 @@ public abstract class InfoSignBase {
 	protected String type;
 	protected String arg1;
 	protected String arg2;
-	protected Map<String, Object> options;
+	protected Map<String, Object> data;
 
 	public InfoSignBase(Sign sign, String type, String arg1, String arg2){
 		this.sign = sign;
@@ -49,11 +49,11 @@ public abstract class InfoSignBase {
 		return arg2;
 	}
 	
-	public Map<String, Object> getOptions(){
-		return options;
+	public Map<String, Object> getData(){
+		return data;
 	}
 	
 	public void setData(Map<String, Object> options){
-		this.options = options;
+		this.data = options;
 	}
 }

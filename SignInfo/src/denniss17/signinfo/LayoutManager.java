@@ -41,7 +41,7 @@ public class LayoutManager {
 
 	protected void reload() {
 		if (configFile == null) {
-			configFile = new File(SignInfo.instance.getDataFolder(), "layout.yml");
+			configFile = new File(SignInfo.instance.getDataFolder(), "layouts.yml");
 		}
 		config = YamlConfiguration.loadConfiguration(configFile);
 	}
