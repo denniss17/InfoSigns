@@ -62,10 +62,10 @@ public class SignInfo extends JavaPlugin {
 		
 		// Check layouts of basic signstypes
 		if(!layoutManager.exists("online", "default")){
-			layoutManager.setLayout("players", "default", "[&9SignInfo&r]", "Online Players:", null, "{count}/{max}");
+			layoutManager.setLayout("online", "default", "[&9SignInfo&r]", "Online Players:", null, "{count}/{max}");
 		}
 		if(!layoutManager.exists("online", "world")){
-			layoutManager.setLayout("players", "world", "[&9SignInfo&r]", "Online Players:", "{world}", "{count}");
+			layoutManager.setLayout("online", "world", "[&9SignInfo&r]", "Online Players:", "{world}", "{count}");
 		}
 		if(!layoutManager.exists("time", "default")){
 			layoutManager.setLayout("time", "default", "[&9SignInfo&r]", "Time:", "{time}", null);
