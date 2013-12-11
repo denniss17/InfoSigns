@@ -6,7 +6,7 @@ import org.bukkit.block.Sign;
 
 import denniss17.signinfo.utils.Messager;
 
-public abstract class InfoSignBase {
+public abstract class InfoSign {
 	protected int id;
 	protected Sign sign;
 	protected String type;
@@ -14,7 +14,7 @@ public abstract class InfoSignBase {
 	protected String arg2;
 	protected Map<String, Object> data;
 
-	public InfoSignBase(Sign sign, String type, String arg1, String arg2){
+	public InfoSign(Sign sign, String type, String arg1, String arg2){
 		this.sign = sign;
 		this.type = type;
 		this.arg1 = arg1;
@@ -114,6 +114,15 @@ public abstract class InfoSignBase {
 
 	public int getId() {
 		return id;
+	}
+	
+	public boolean isInfoMultiSign(){
+		return sign==null;
+	}
+
+	public void setLine(int index, String string) throws IndexOutOfBoundsException {
+		sign.setLine(index, string);
+		sign.update();		
 	}
 	
 }

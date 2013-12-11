@@ -6,9 +6,9 @@ import org.bukkit.block.Sign;
 import org.bukkit.scheduler.BukkitTask;
 
 import denniss17.signinfo.SignInfo;
-import denniss17.signinfo.InfoSignBase;
+import denniss17.signinfo.InfoSign;
 
-public class TimeInfoSign extends InfoSignBase{
+public class TimeInfoSign extends InfoSign{
 
 	public TimeInfoSign(Sign sign, String type, String arg1, String arg2) {
 		super(sign, type, arg1, arg2);

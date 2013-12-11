@@ -18,7 +18,7 @@ public class LayoutManager {
 	 * @param infoSign The sign to get the layout from
 	 * @return String[] of length 4
 	 */
-	public String[] getLayout(InfoSignBase infoSign){
+	public String[] getLayout(InfoSign infoSign){
 		return getLayout(infoSign, "default");
 	}
 	
@@ -30,7 +30,7 @@ public class LayoutManager {
 	 * @param subtype The layout subtype
 	 * @return String[] of length 4
 	 */
-	public String[] getLayout(InfoSignBase infoSign, String subtype){
+	public String[] getLayout(InfoSign infoSign, String subtype){
 		// TODO cache
 		if(SignInfo.signManager.getLayoutOverride(infoSign.getId())!=null){
 			return SignInfo.signManager.getLayoutOverride(infoSign.getId());

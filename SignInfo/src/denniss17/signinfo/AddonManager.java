@@ -75,10 +75,10 @@ public class AddonManager {
 					
 					// 2. Load the class
 					Class<?> clazz = loader.loadClass(classpath);
-					if(clazz!=null && clazz.getSuperclass().equals(InfoSignBase.class)){
+					if(clazz!=null && clazz.getSuperclass().equals(InfoSign.class)){
 						// Success!
 						// 3. Add the sign to the list of signs
-						SignInfo.instance.addInfoSignType(signtype, (Class<? extends InfoSignBase>) clazz);
+						SignInfo.instance.addInfoSignType(signtype, (Class<? extends InfoSign>) clazz);
 						// Check if layout is in layouts.yml
 						checkLayouts(addonConfiguration, signtype);	
 						count++;									

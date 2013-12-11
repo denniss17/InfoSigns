@@ -10,9 +10,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import denniss17.signinfo.SignInfo;
-import denniss17.signinfo.InfoSignBase;
+import denniss17.signinfo.InfoSign;
 
-public class OnlinePlayersInfoSign extends InfoSignBase implements Listener {
+public class OnlinePlayersInfoSign extends InfoSign implements Listener {
 
 	public OnlinePlayersInfoSign(Sign sign, String type, String arg1, String arg2) {
 		super(sign, type, arg1, arg2);

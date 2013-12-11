@@ -20,29 +20,29 @@ public class SignManager {
 	private FileConfiguration config = null;
 	private File configFile = null;
 	
-	private Map<Integer, InfoSignBase> infoSigns;
+	private Map<Integer, InfoSign> infoSigns;
 	
 	public SignManager(){
-		this.infoSigns = new HashMap<Integer, InfoSignBase>();
+		this.infoSigns = new HashMap<Integer, InfoSign>();
 	}
 
-	public void addInfoSign(InfoSignBase infoSign) {
+	public void addInfoSign(InfoSign infoSign) {
 		if(infoSign.id == 0) infoSign.id = getNextId();
 		infoSigns.put(infoSign.id, infoSign);		
 	}
 
-	public void removeInfoSign(InfoSignBase infoSign) {
+	public void removeInfoSign(InfoSign infoSign) {
 		infoSign.destroy();
 		get().set(String.valueOf(infoSign.id), null);
 		save();
 	}
 
-	public InfoSignBase getInfoSign(int id){
+	public InfoSign getInfoSign(int id){
 		return infoSigns.get(id);
 	}
 
-	public InfoSignBase getInfoSign(Sign signBlock) {
-		for(InfoSignBase infoSign : infoSigns.values()){
+	public InfoSign getInfoSign(Sign signBlock) {
+		for(InfoSign infoSign : infoSigns.values()){
 			if(infoSign.getSign().getLocation().equals(signBlock.getLocation())) return infoSign;
 		}
 		return null;
@@ -87,7 +87,7 @@ public class SignManager {
 			data = get().getConfigurationSection(id + ".data").getValues(false);
 		}
 		
-		InfoSignBase infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
+		InfoSign infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
 		
 		if(infoSign!=null){
 			infoSign.id = id;
@@ -101,7 +101,7 @@ public class SignManager {
 		}
 	}
 
-	public void saveInfoSign(InfoSignBase signInfoSign) {
+	public void saveInfoSign(InfoSign signInfoSign) {
 		if(signInfoSign.id ==0) signInfoSign.id = getNextId();
 		int id = signInfoSign.id;
 		get().set(id + ".sign", signToString(signInfoSign.getSign()));

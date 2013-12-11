@@ -2,9 +2,9 @@ package denniss17.signinfo.addons.test;
 
 import org.bukkit.block.Sign;
 
-import denniss17.signinfo.InfoSignBase;
+import denniss17.signinfo.InfoSign;
 
-public class TestSign extends InfoSignBase {
+public class TestSign extends InfoSign {
 
 	public TestSign(Sign sign, String type, String arg1, String arg2) {
 		super(sign, type, arg1, arg2);

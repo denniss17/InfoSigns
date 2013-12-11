@@ -10,7 +10,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import denniss17.signinfo.SignInfo;
-import denniss17.signinfo.InfoSignBase;
+import denniss17.signinfo.InfoSign;
 import denniss17.signinfo.utils.Messager;
 
 public class SignListener implements Listener {
@@ -43,7 +43,7 @@ public class SignListener implements Listener {
 			if(arg2.equals("")) arg2 = null;
 			
 			// Create sign
-			InfoSignBase infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
+			InfoSign infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
 			if(infoSign!=null){
 				// First add it, so it gets an id assigned
 				SignInfo.signManager.addInfoSign(infoSign);
@@ -81,7 +81,7 @@ public class SignListener implements Listener {
 			// Block
 			Sign signBlock = (Sign)event.getBlock().getState();
 			
-			InfoSignBase infoSign = SignInfo.signManager.getInfoSign(signBlock);
+			InfoSign infoSign = SignInfo.signManager.getInfoSign(signBlock);
 			if(infoSign!=null){
 				Block attachedBlock = event.getBlock().getRelative(sign.getAttachedFace());
 				if(attachedBlock.isEmpty()){
@@ -103,7 +103,7 @@ public class SignListener implements Listener {
 		if (event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN) {
 			Sign signBlock = (Sign)event.getBlock().getState();
 			
-			InfoSignBase infoSign = SignInfo.signManager.getInfoSign(signBlock);
+			InfoSign infoSign = SignInfo.signManager.getInfoSign(signBlock);
 			if(infoSign!=null){
 				// Block removed
 				SignInfo.signManager.removeInfoSign(infoSign);

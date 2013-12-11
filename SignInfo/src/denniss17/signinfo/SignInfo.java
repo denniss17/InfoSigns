@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import denniss17.signinfo.listeners.SignListener;
 import denniss17.signinfo.signs.OnlinePlayersInfoSign;
+import denniss17.signinfo.signs.PlayersInfoSign;
 import denniss17.signinfo.signs.TimeInfoSign;
 import denniss17.signinfo.utils.Messager;
 
@@ -22,13 +25,13 @@ public class SignInfo extends JavaPlugin {
 	public static SignManager signManager;
 	public static LayoutManager layoutManager;
 	
-	private Map<String, Class<? extends InfoSignBase>> infoSignTypes;
+	private Map<String, Class<? extends InfoSign>> infoSignTypes;
 	
 	@Override
 	public void onEnable(){
 		// Set variables
 		instance = this;
-		infoSignTypes = new HashMap<String, Class<? extends InfoSignBase>>();
+		infoSignTypes = new HashMap<String, Class<? extends InfoSign>>();
 		signManager = new SignManager();
 		layoutManager = new LayoutManager();
 		
@@ -59,6 +62,7 @@ public class SignInfo extends JavaPlugin {
 	private void addCoreInfoSigns() {
 		infoSignTypes.put("time", TimeInfoSign.class);
 		infoSignTypes.put("online", OnlinePlayersInfoSign.class);
+		infoSignTypes.put("players", PlayersInfoSign.class);
 		
 		// Check layouts of basic signstypes
 		if(!layoutManager.exists("online", "default")){
@@ -72,11 +76,11 @@ public class SignInfo extends JavaPlugin {
 		}
 	}
 
-	public Map<String, Class<? extends InfoSignBase>> getInfoSignTypes(){
+	public Map<String, Class<? extends InfoSign>> getInfoSignTypes(){
 		return infoSignTypes;
 	}
 	
-	public void addInfoSignType(String signtype, Class<? extends InfoSignBase> clazz) {
+	public void addInfoSignType(String signtype, Class<? extends InfoSign> clazz) {
 		infoSignTypes.put(signtype, clazz);		
 	}
 
@@ -96,20 +100,33 @@ public class SignInfo extends JavaPlugin {
 	 * @param arg2 Argument passed to the constructor of the InfoSign
 	 * @return An InfoSignBase instance
 	 */
-	public InfoSignBase createNewSign(Sign sign, String type, String arg1, String arg2){
+	public InfoSign createNewSign(Sign sign, String type, String arg1, String arg2){
 		//getLogger().info("Trying to create sign " + type + " (" + arg1 + "," + arg2 + ")");
 		// Get class
-		Class<? extends InfoSignBase> signClass = infoSignTypes.get(type);
+		Class<? extends InfoSign> signClass = infoSignTypes.get(type);
 		
 		if(signClass==null){
 			getLogger().info("E: Type not existing: " + type);
 			return null;
 		}
 		
-		// Get constructor
-		Constructor<? extends InfoSignBase> constructor = null;
+		boolean isMultiSign = signClass.getSuperclass().equals(InfoMultiSign.class);
+		// Find other signs if it is an InfoMultiSign
+		Sign[][] signs = null;
+		if(isMultiSign){
+			signs = extendToMultiSign(sign);
+		}
+		
+		
+		Constructor<? extends InfoSign> constructor = null;
+		
+		// 1. Find constructor
 		try {
-			constructor = signClass.getConstructor(Sign.class, String.class, String.class, String.class);
+			if(isMultiSign){
+				constructor = signClass.getConstructor(Sign[][].class, String.class, String.class, String.class);
+			}else{
+				constructor = signClass.getConstructor(Sign.class, String.class, String.class, String.class);
+			}
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -122,10 +139,14 @@ public class SignInfo extends JavaPlugin {
 			return null;
 		}
 		
-		// Call constructor
+		// 2. Call constructor
 		try {
-			InfoSignBase infoSign = constructor.newInstance(sign, type, arg1, arg2);
-			//getLogger().info("Success!");
+			InfoSign infoSign;
+			if(isMultiSign){
+				infoSign = constructor.newInstance(signs, type, arg1, arg2);
+			}else{
+				infoSign = constructor.newInstance(sign,  type, arg1, arg2);
+			}
 			return infoSign;
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
@@ -145,6 +166,20 @@ public class SignInfo extends JavaPlugin {
 		return null;
 	}
 	
+	private Sign[][] extendToMultiSign(Sign sign) {
+		org.bukkit.material.Sign signMaterial = (org.bukkit.material.Sign)sign.getData();
+		Block signBlock = sign.getBlock();
+		
+		BlockFace facing = signMaterial.getFacing();
+		
+		// First go down untill block is no sign anymore
+		
+		
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandlabel, String[] args) {
 		String types = "Available types: &7";
