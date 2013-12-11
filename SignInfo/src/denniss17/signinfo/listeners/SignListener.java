@@ -45,11 +45,23 @@ public class SignListener implements Listener {
 			// Create sign
 			InfoSignBase infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
 			if(infoSign!=null){
-				Messager.send(event.getPlayer(), Messager.getConfigMessage("sign_creation_success").replace("{type}", type));
-				SignInfo.instance.getLogger().info("InfoSign of type '" + type + "' created by " + event.getPlayer().getName());
+				// First add it, so it gets an id assigned
 				SignInfo.signManager.addInfoSign(infoSign);
-				infoSign.initialize();
+				try{
+					infoSign.initialize();
+				}catch(Exception e){
+					// Something went wrong -> print error and undo addition
+					SignInfo.instance.getLogger().warning("An exception occurred while initializing an InfoSign of type '" + type + "':");
+					e.printStackTrace();
+					SignInfo.signManager.removeInfoSign(infoSign);
+					Messager.sendConfig(event.getPlayer(), "sign_creation_failed");
+					event.setCancelled(true);
+					return;
+				}
+				// Successfully initialized -> save it
 				SignInfo.signManager.saveInfoSign(infoSign);
+				SignInfo.instance.getLogger().info("InfoSign of type '" + type + "' created by " + event.getPlayer().getName());
+				Messager.send(event.getPlayer(), Messager.getConfigMessage("sign_creation_success").replace("{type}", type));
 				event.setCancelled(true);
 			}else{
 				Messager.sendConfig(event.getPlayer(), "sign_creation_failed");
@@ -74,7 +86,7 @@ public class SignListener implements Listener {
 				Block attachedBlock = event.getBlock().getRelative(sign.getAttachedFace());
 				if(attachedBlock.isEmpty()){
 					// Block removed
-					SignInfo.signManager.removeSign(infoSign);
+					SignInfo.signManager.removeInfoSign(infoSign);
 					SignInfo.instance.getLogger().info("InfoSign " + infoSign.id + " removed. (type:" + infoSign.getType() + ")");
 					// Unable to send message to player, as player is not attached to event
 				}
@@ -94,7 +106,7 @@ public class SignListener implements Listener {
 			InfoSignBase infoSign = SignInfo.signManager.getInfoSign(signBlock);
 			if(infoSign!=null){
 				// Block removed
-				SignInfo.signManager.removeSign(infoSign);
+				SignInfo.signManager.removeInfoSign(infoSign);
 				SignInfo.instance.getLogger().info("InfoSign " + infoSign.id + " removed. (type:" + infoSign.getType() + ")");
 				Messager.sendConfig(event.getPlayer(), "sign_broken");
 			}			

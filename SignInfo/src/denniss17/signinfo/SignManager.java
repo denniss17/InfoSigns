@@ -31,7 +31,7 @@ public class SignManager {
 		infoSigns.put(infoSign.id, infoSign);		
 	}
 
-	public void removeSign(InfoSignBase infoSign) {
+	public void removeInfoSign(InfoSignBase infoSign) {
 		infoSign.destroy();
 		get().set(String.valueOf(infoSign.id), null);
 		save();

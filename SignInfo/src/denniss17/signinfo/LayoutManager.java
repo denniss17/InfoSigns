@@ -19,7 +19,8 @@ public class LayoutManager {
 		return getLayout(type, "default");
 	}
 	
-	public String[] getLayout(String type, String subtype){		
+	public String[] getLayout(String type, String subtype){
+		// TODO cache
 		String[] result = new String[4];
 		String path = type + "." + subtype + ".";
 		result[0] = Messager.setTotalStyle(get().getString(path+"0"));

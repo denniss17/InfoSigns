@@ -22,19 +22,16 @@ public class OnlinePlayersInfoSign extends InfoSignBase implements Listener {
 	public void updateSign() {
 		if(arg1!=null){
 			World world = SignInfo.instance.getServer().getWorld(arg1);
-			String[] layout = this.getLayout("world");
-			sign.setLine(0, layout[0].replace("{world}", arg1).replace("{count}", world==null ? "Error" : String.valueOf(world.getPlayers().size())));
-			sign.setLine(1, layout[1].replace("{world}", arg1).replace("{count}", world==null ? "Error" : String.valueOf(world.getPlayers().size())));
-			sign.setLine(2, layout[2].replace("{world}", arg1).replace("{count}", world==null ? "Error" : String.valueOf(world.getPlayers().size())));
-			sign.setLine(3, layout[3].replace("{world}", arg1).replace("{count}", world==null ? "Error" : String.valueOf(world.getPlayers().size())));
+			parseLayout("world", 
+					"world", arg1, 
+					"count",  world==null ? "Error" : String.valueOf(world.getPlayers().size())
+					);
 		}else{
-			String[] layout = this.getLayout();
-			sign.setLine(0, layout[0].replace("{count}", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length)).replace("{max}", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())));
-			sign.setLine(1, layout[1].replace("{count}", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length)).replace("{max}", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())));
-			sign.setLine(2, layout[2].replace("{count}", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length)).replace("{max}", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())));
-			sign.setLine(3, layout[3].replace("{count}", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length)).replace("{max}", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())));
+			parseLayout("default", 
+				"count", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length),
+				"max", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())
+			);
 		}
-		sign.update();
 	}
 
 	@Override
@@ -46,7 +43,16 @@ public class OnlinePlayersInfoSign extends InfoSignBase implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){
-		updateSign();
+		// If player joins, event.getPlayer().getWorld().getPlayers() doesn't contain the
+		// current player yet. As a result, the sign would be wrong
+		// Therefore the updated is delayed with 1 tick, so the joining players
+		// is added to the players of the world
+		SignInfo.instance.getServer().getScheduler().runTaskLater(SignInfo.instance, new Runnable(){
+			@Override
+			public void run() {
+				updateSign();
+			}
+		}, 1);
 	}
 	
 	@EventHandler

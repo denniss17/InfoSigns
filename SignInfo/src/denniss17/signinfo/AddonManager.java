@@ -120,7 +120,7 @@ public class AddonManager {
 	private static File[] listAddons(){
 		File addonsDir = new File(SignInfo.instance.getDataFolder(), AddonManager.addonFolder);
 		File[] files = addonsDir.listFiles(new jarFilter());
-		return files;
+		return files==null ? new File[0] : files;
 	}
 
 	private static boolean checkAddonConfiguration(YamlConfiguration addonConfiguration) {

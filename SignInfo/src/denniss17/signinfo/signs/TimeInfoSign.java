@@ -26,12 +26,7 @@ public class TimeInfoSign extends InfoSignBase{
 
 	@Override
 	public void updateSign() {
-		String[] layout = this.getLayout();
-		sign.setLine(0, layout[0].replace("{time}", ticksToHuman((int) sign.getWorld().getTime())));
-		sign.setLine(1, layout[1].replace("{time}", ticksToHuman((int) sign.getWorld().getTime())));
-		sign.setLine(2, layout[2].replace("{time}", ticksToHuman((int) sign.getWorld().getTime())));
-		sign.setLine(3, layout[3].replace("{time}", ticksToHuman((int) sign.getWorld().getTime())));
-		sign.update();
+		parseLayout("default", "time", ticksToHuman((int) sign.getWorld().getTime()));
 	}
 
 	@Override
