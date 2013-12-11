@@ -59,6 +59,19 @@ public class SignManager {
 		}
 		SignInfo.instance.getLogger().info(infoSigns.size() + " InfoSigns loaded");
 	}
+	
+	public String[] getLayoutOverride(int id){
+		if(get().contains(id + ".layout")){
+			String[] result = new String[4];
+			String path = id + ".layout.";
+			result[0] = get().getString(path+"0");
+			result[1] = get().getString(path+"1");
+			result[2] = get().getString(path+"2");
+			result[3] = get().getString(path+"3");
+			return result;
+		}
+		return null;
+	}
 
 	private void loadInfoSign(int id){
 		Sign sign = stringToSign(get().getString(id + ".sign"), SignInfo.instance.getServer());

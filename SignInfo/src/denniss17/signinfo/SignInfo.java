@@ -48,13 +48,13 @@ public class SignInfo extends JavaPlugin {
 		
 		// Check layouts of basic signstypes
 		if(!layoutManager.exists("players", "default")){
-			layoutManager.setLayout("players", "default", "&8[&9SignInfo&8]", "Online Players:", null, "{count}/{max}");
+			layoutManager.setLayout("players", "default", "[&9SignInfo&r]", "Online Players:", null, "{count}/{max}");
 		}
 		if(!layoutManager.exists("players", "world")){
-			layoutManager.setLayout("players", "world", "&8[&9SignInfo&8]", "Online Players:", "{world}", "{count}");
+			layoutManager.setLayout("players", "world", "[&9SignInfo&r]", "Online Players:", "{world}", "{count}");
 		}
 		if(!layoutManager.exists("time", "default")){
-			layoutManager.setLayout("time", "default", "&8[&9SignInfo&8]", "Time:", "{time}", null);
+			layoutManager.setLayout("time", "default", "[&9SignInfo&r]", "Time:", "{time}", null);
 		}
 		
 		// Load all currently existing InfoSigns and get them running

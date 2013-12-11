@@ -87,7 +87,7 @@ public class SignListener implements Listener {
 				if(attachedBlock.isEmpty()){
 					// Block removed
 					SignInfo.signManager.removeInfoSign(infoSign);
-					SignInfo.instance.getLogger().info("InfoSign " + infoSign.id + " removed. (type:" + infoSign.getType() + ")");
+					SignInfo.instance.getLogger().info("InfoSign " + infoSign.getId() + " removed. (type:" + infoSign.getType() + ")");
 					// Unable to send message to player, as player is not attached to event
 				}
 			}			
@@ -107,7 +107,7 @@ public class SignListener implements Listener {
 			if(infoSign!=null){
 				// Block removed
 				SignInfo.signManager.removeInfoSign(infoSign);
-				SignInfo.instance.getLogger().info("InfoSign " + infoSign.id + " removed. (type:" + infoSign.getType() + ")");
+				SignInfo.instance.getLogger().info("InfoSign " + infoSign.getId() + " removed. (type:" + infoSign.getType() + ")");
 				Messager.sendConfig(event.getPlayer(), "sign_broken");
 			}			
 		}		

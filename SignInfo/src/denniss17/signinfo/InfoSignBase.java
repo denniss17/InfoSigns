@@ -7,7 +7,7 @@ import org.bukkit.block.Sign;
 import denniss17.signinfo.utils.Messager;
 
 public abstract class InfoSignBase {
-	public int id;
+	protected int id;
 	protected Sign sign;
 	protected String type;
 	protected String arg1;
@@ -55,7 +55,7 @@ public abstract class InfoSignBase {
 	 * is empty
 	 */
 	public String[] getLayout(String subtype){
-		return SignInfo.layoutManager.getLayout(type, subtype);
+		return SignInfo.layoutManager.getLayout(this, subtype);
 	}
 
 	/**
@@ -111,4 +111,9 @@ public abstract class InfoSignBase {
 	public void setData(Map<String, Object> options){
 		this.data = options;
 	}
+
+	public int getId() {
+		return id;
+	}
+	
 }
