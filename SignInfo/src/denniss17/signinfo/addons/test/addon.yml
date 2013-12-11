@@ -2,7 +2,7 @@ testsign:
    class: denniss17.signinfo.addons.test.TestSign
    layouts:
       default:
-         '0': '&8[&9SignInfo&8]'
+         '0': '[&9SignInfo&r]'
          '1': 'test1'
          '2': 'test2'
          '3': 'test3'

@@ -43,19 +43,7 @@ public class SignInfo extends JavaPlugin {
 		SignInfo.instance.getLogger().info("Loaded signs from addons: " + count);
 		
 		// Add basic signtypes
-		infoSignTypes.put("time", TimeInfoSign.class);
-		infoSignTypes.put("players", OnlinePlayersInfoSign.class);
-		
-		// Check layouts of basic signstypes
-		if(!layoutManager.exists("players", "default")){
-			layoutManager.setLayout("players", "default", "[&9SignInfo&r]", "Online Players:", null, "{count}/{max}");
-		}
-		if(!layoutManager.exists("players", "world")){
-			layoutManager.setLayout("players", "world", "[&9SignInfo&r]", "Online Players:", "{world}", "{count}");
-		}
-		if(!layoutManager.exists("time", "default")){
-			layoutManager.setLayout("time", "default", "[&9SignInfo&r]", "Time:", "{time}", null);
-		}
+		addCoreInfoSigns();
 		
 		// Load all currently existing InfoSigns and get them running
 		signManager.loadInfoSigns();
@@ -68,6 +56,22 @@ public class SignInfo extends JavaPlugin {
 		saveConfig();
 	}
 	
+	private void addCoreInfoSigns() {
+		infoSignTypes.put("time", TimeInfoSign.class);
+		infoSignTypes.put("online", OnlinePlayersInfoSign.class);
+		
+		// Check layouts of basic signstypes
+		if(!layoutManager.exists("online", "default")){
+			layoutManager.setLayout("players", "default", "[&9SignInfo&r]", "Online Players:", null, "{count}/{max}");
+		}
+		if(!layoutManager.exists("online", "world")){
+			layoutManager.setLayout("players", "world", "[&9SignInfo&r]", "Online Players:", "{world}", "{count}");
+		}
+		if(!layoutManager.exists("time", "default")){
+			layoutManager.setLayout("time", "default", "[&9SignInfo&r]", "Time:", "{time}", null);
+		}
+	}
+
 	public Map<String, Class<? extends InfoSignBase>> getInfoSignTypes(){
 		return infoSignTypes;
 	}
