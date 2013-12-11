@@ -19,7 +19,7 @@ import denniss17.signinfo.utils.Messager;
 
 public class SignInfo extends JavaPlugin {
 	public static SignInfo instance;
-	public static SignManager manager;
+	public static SignManager signManager;
 	public static LayoutManager layoutManager;
 	
 	private Map<String, Class<? extends InfoSignBase>> infoSignTypes;
@@ -29,16 +29,18 @@ public class SignInfo extends JavaPlugin {
 		// Set variables
 		instance = this;
 		infoSignTypes = new HashMap<String, Class<? extends InfoSignBase>>();
-		manager = new SignManager();
+		signManager = new SignManager();
 		layoutManager = new LayoutManager();
 		
-		File addonsfolder = new File(getDataFolder(), AddonLoader.addonFolder);
+		// Check addons directory
+		File addonsfolder = new File(getDataFolder(), AddonManager.addonFolder);
 		if(!addonsfolder.exists()){
 			addonsfolder.mkdir();
 		}
 		
-		int count = AddonLoader.loadAddons();
-		SignInfo.instance.getLogger().info("Loaded signs: " + count);
+		// Load addons
+		int count = AddonManager.loadAddons();
+		SignInfo.instance.getLogger().info("Loaded signs from addons: " + count);
 		
 		// Add basic signtypes
 		infoSignTypes.put("time", TimeInfoSign.class);
@@ -55,11 +57,13 @@ public class SignInfo extends JavaPlugin {
 			layoutManager.setLayout("time", "default", "&8[&9SignInfo&8]", "Time:", "{time}", null);
 		}
 		
-		manager.loadInfoSigns();
+		// Load all currently existing InfoSigns and get them running
+		signManager.loadInfoSigns();
 		
-		// Listeners
+		// Register listener
 		this.getServer().getPluginManager().registerEvents(new SignListener(), this);
 		
+		// Save config
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 	}
@@ -80,18 +84,26 @@ public class SignInfo extends JavaPlugin {
 		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * Try to make an InfoSign of the given sign, of the given type
+	 * @param sign The sign on which the info should be displayed
+	 * @param type The type of the sign
+	 * @param arg1 Argument passed to the constructor of the InfoSign
+	 * @param arg2 Argument passed to the constructor of the InfoSign
+	 * @return An InfoSignBase instance
+	 */
 	public InfoSignBase createNewSign(Sign sign, String type, String arg1, String arg2){
 		//getLogger().info("Trying to create sign " + type + " (" + arg1 + "," + arg2 + ")");
-		
+		// Get class
 		Class<? extends InfoSignBase> signClass = infoSignTypes.get(type);
 		
 		if(signClass==null){
-			getLogger().info("E: Type not existing");
+			getLogger().info("E: Type not existing: " + type);
 			return null;
 		}
 		
+		// Get constructor
 		Constructor<? extends InfoSignBase> constructor = null;
-		
 		try {
 			constructor = signClass.getConstructor(Sign.class, String.class, String.class, String.class);
 		} catch (NoSuchMethodException e) {
@@ -106,6 +118,7 @@ public class SignInfo extends JavaPlugin {
 			return null;
 		}
 		
+		// Call constructor
 		try {
 			InfoSignBase infoSign = constructor.newInstance(sign, type, arg1, arg2);
 			//getLogger().info("Success!");

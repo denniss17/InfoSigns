@@ -13,10 +13,17 @@ import java.util.zip.ZipEntry;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class AddonLoader {
+public class AddonManager {
+	/**
+	 * The path of the folder, relative to plugin.getDataFolder(), where the addons
+	 * are stored
+	 */
 	public static final String addonFolder = "addons";
 	
-	static class jarFilter implements FilenameFilter{
+	/**
+	 * Class used to filter the jar files in the addons folder
+	 */
+	private static class jarFilter implements FilenameFilter{
 		@Override
 		public boolean accept(File dir, String name) {
 			return name.endsWith(".jar");
@@ -48,19 +55,29 @@ public class AddonLoader {
 				InputStream inputStream = jarFile.getInputStream(addonYAML);
 				YamlConfiguration addonConfiguration = YamlConfiguration.loadConfiguration(inputStream);
 				
+				// Check addon.yml
+				if(!checkAddonConfiguration(addonConfiguration)){
+					SignInfo.instance.getLogger().warning("addon.yml in " + file.getName() + " is not correct");
+					continue;
+				}
+				
 				// Initialize ClassLoader
 				URLClassLoader loader = new URLClassLoader(new URL[] {file.toURI().toURL()} , SignInfo.class.getClassLoader());
 				
 				// Load signtypes and classes
 				for(String signtype : addonConfiguration.getKeys(false)){
+					// 1. Get the path of the class
 					String classpath = addonConfiguration.getString(signtype + ".class");
 					if(classpath==null){
 						logger.warning("Signtype " + signtype + " didn't specify a class! (addon: " + file.getName() + ")");
 						continue;
 					}
+					
+					// 2. Load the class
 					Class<?> clazz = loader.loadClass(classpath);
-					if(clazz.getSuperclass().equals(InfoSignBase.class)){
+					if(clazz!=null && clazz.getSuperclass().equals(InfoSignBase.class)){
 						// Success!
+						// 3. Add the sign to the list of signs
 						SignInfo.instance.addInfoSignType(signtype, (Class<? extends InfoSignBase>) clazz);
 						// Check if layout is in layouts.yml
 						checkLayouts(addonConfiguration, signtype);	
@@ -96,6 +113,27 @@ public class AddonLoader {
 		return count;
 	}
 	
+	/**
+	 * Looks in the addons folder and searches for all jars in this directory
+	 * @return A list of .jar files in the addons folder
+	 */
+	private static File[] listAddons(){
+		File addonsDir = new File(SignInfo.instance.getDataFolder(), AddonManager.addonFolder);
+		File[] files = addonsDir.listFiles(new jarFilter());
+		return files;
+	}
+
+	private static boolean checkAddonConfiguration(YamlConfiguration addonConfiguration) {
+		// TODO add check if addon.yml is correct
+		return true;
+	}
+
+	/**
+	 * Checks if the layout of the addon is in the main layouts.yml file
+	 * If not, it is added to it, so the user can configure the layout of these signs
+	 * @param addonConfiguration The addon.yml file
+	 * @param signtype The type of the sign
+	 */
 	private static void checkLayouts(YamlConfiguration addonConfiguration, String signtype) {
 		for(String key : addonConfiguration.getConfigurationSection(signtype + ".layouts").getKeys(false)){
 			if(!SignInfo.layoutManager.exists(signtype, key)){
@@ -109,12 +147,6 @@ public class AddonLoader {
 		}
 			
 			
-	}
-
-	public static File[] listAddons(){
-		File addonsDir = new File(SignInfo.instance.getDataFolder(), AddonLoader.addonFolder);
-		File[] files = addonsDir.listFiles(new jarFilter());
-		return files;
 	}
 	
 }

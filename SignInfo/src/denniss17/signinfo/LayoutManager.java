@@ -13,6 +13,7 @@ import denniss17.signinfo.utils.Messager;
 public class LayoutManager {
 	private FileConfiguration config = null;
 	private File configFile = null;
+	private static String filename = "layouts.yml";
 	
 	public String[] getLayout(String type){
 		return getLayout(type, "default");
@@ -43,7 +44,7 @@ public class LayoutManager {
 
 	protected void reload() {
 		if (configFile == null) {
-			configFile = new File(SignInfo.instance.getDataFolder(), "layouts.yml");
+			configFile = new File(SignInfo.instance.getDataFolder(), filename);
 		}
 		config = YamlConfiguration.loadConfiguration(configFile);
 	}
