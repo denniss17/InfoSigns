@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.bukkit.block.Sign;
 
+import denniss17.signinfo.utils.Messager;
+
 public abstract class InfoSignBase {
 	public int id;
 	protected Sign sign;
@@ -77,7 +79,7 @@ public abstract class InfoSignBase {
 		// Set lines
 		for(int j=0; j<4; j++){
 			if(output[j]!=null){
-				sign.setLine(j, output[j]);;
+				sign.setLine(j, Messager.setTotalStyle(output[j]));;
 			}else{
 				sign.setLine(j, "");
 			}

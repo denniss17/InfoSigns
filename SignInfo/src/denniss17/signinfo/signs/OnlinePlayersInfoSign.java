@@ -23,7 +23,7 @@ public class OnlinePlayersInfoSign extends InfoSignBase implements Listener {
 		if(arg1!=null){
 			World world = SignInfo.instance.getServer().getWorld(arg1);
 			parseLayout("world", 
-					"world", arg1, 
+					"world", arg2==null ? arg1 : arg2, 
 					"count",  world==null ? "Error" : String.valueOf(world.getPlayers().size())
 					);
 		}else{

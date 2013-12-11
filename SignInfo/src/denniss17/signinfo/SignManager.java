@@ -71,7 +71,7 @@ public class SignManager {
 		String arg2 = get().getString(id + ".arg2");
 		Map<String, Object> data = null;
 		if(get().contains(id + ".data")){
-			data = get().getConfigurationSection(id + ".options").getValues(false);
+			data = get().getConfigurationSection(id + ".data").getValues(false);
 		}
 		
 		InfoSignBase infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
