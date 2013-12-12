@@ -1,4 +1,4 @@
-package denniss17.signinfo.signs;
+package denniss17.infosigns.signs;
 
 
 import org.bukkit.World;
@@ -9,8 +9,8 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import denniss17.signinfo.SignInfo;
-import denniss17.signinfo.InfoSign;
+import denniss17.infosigns.InfoSign;
+import denniss17.infosigns.InfoSigns;
 
 public class OnlinePlayersInfoSign extends InfoSign implements Listener {
 
@@ -21,22 +21,22 @@ public class OnlinePlayersInfoSign extends InfoSign implements Listener {
 	@Override
 	public void updateSign() {
 		if(arg1!=null){
-			World world = SignInfo.instance.getServer().getWorld(arg1);
+			World world = InfoSigns.instance.getServer().getWorld(arg1);
 			parseLayout("world", 
 					"world", arg2==null ? arg1 : arg2, 
 					"count",  world==null ? "Error" : String.valueOf(world.getPlayers().size())
 					);
 		}else{
 			parseLayout("default", 
-				"count", String.valueOf(SignInfo.instance.getServer().getOnlinePlayers().length),
-				"max", String.valueOf(SignInfo.instance.getServer().getMaxPlayers())
+				"count", String.valueOf(InfoSigns.instance.getServer().getOnlinePlayers().length),
+				"max", String.valueOf(InfoSigns.instance.getServer().getMaxPlayers())
 			);
 		}
 	}
 
 	@Override
 	public boolean initialize() {
-		SignInfo.instance.registerListener(this);
+		InfoSigns.instance.registerListener(this);
 		updateSign();
 		return true;
 	}
@@ -47,7 +47,7 @@ public class OnlinePlayersInfoSign extends InfoSign implements Listener {
 		// current player yet. As a result, the sign would be wrong
 		// Therefore the updated is delayed with 1 tick, so the joining players
 		// is added to the players of the world
-		SignInfo.instance.getServer().getScheduler().runTaskLater(SignInfo.instance, new Runnable(){
+		InfoSigns.instance.getServer().getScheduler().runTaskLater(InfoSigns.instance, new Runnable(){
 			@Override
 			public void run() {
 				updateSign();
@@ -67,7 +67,7 @@ public class OnlinePlayersInfoSign extends InfoSign implements Listener {
 
 	@Override
 	public boolean destroy() {
-		SignInfo.instance.unregisterListener(this);
+		InfoSigns.instance.unregisterListener(this);
 		return true;
 	}
 

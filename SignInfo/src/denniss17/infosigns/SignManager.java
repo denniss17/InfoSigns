@@ -1,4 +1,4 @@
-package denniss17.signinfo;
+package denniss17.infosigns;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,10 +54,10 @@ public class SignManager {
 				int id = Integer.parseInt(key);
 				loadInfoSign(id);
 			}catch(NumberFormatException e){
-				SignInfo.instance.getLogger().warning(key + " is not a valid InfoSign id (not a number)");
+				InfoSigns.instance.getLogger().warning(key + " is not a valid InfoSign id (not a number)");
 			}
 		}
-		SignInfo.instance.getLogger().info(infoSigns.size() + " InfoSigns loaded");
+		InfoSigns.instance.getLogger().info(infoSigns.size() + " InfoSigns loaded");
 	}
 	
 	public String[] getLayoutOverride(int id){
@@ -74,9 +74,9 @@ public class SignManager {
 	}
 
 	private void loadInfoSign(int id){
-		Sign sign = stringToSign(get().getString(id + ".sign"), SignInfo.instance.getServer());
+		Sign sign = stringToSign(get().getString(id + ".sign"), InfoSigns.instance.getServer());
 		if(sign==null){
-			SignInfo.instance.getLogger().warning("The sign of InfoSign " + id + " does not exist!");
+			InfoSigns.instance.getLogger().warning("The sign of InfoSign " + id + " does not exist!");
 			return;
 		}
 		String type = get().getString(id + ".type");
@@ -87,7 +87,7 @@ public class SignManager {
 			data = get().getConfigurationSection(id + ".data").getValues(false);
 		}
 		
-		InfoSign infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
+		InfoSign infoSign = InfoSigns.instance.createNewSign(sign, type, arg1, arg2);
 		
 		if(infoSign!=null){
 			infoSign.id = id;
@@ -97,7 +97,7 @@ public class SignManager {
 			infoSign.initialize();
 			infoSigns.put(id, infoSign);
 		}else{
-			SignInfo.instance.getLogger().warning("InfoSign " + id + " could not be instantiated!");
+			InfoSigns.instance.getLogger().warning("InfoSign " + id + " could not be instantiated!");
 		}
 	}
 
@@ -173,7 +173,7 @@ public class SignManager {
 	
 	protected void reload() {
 		if (configFile == null) {
-			configFile = new File(SignInfo.instance.getDataFolder(), "signs.yml");
+			configFile = new File(InfoSigns.instance.getDataFolder(), "signs.yml");
 		}
 		config = YamlConfiguration.loadConfiguration(configFile);
 	}
@@ -185,7 +185,7 @@ public class SignManager {
 		try {
 			config.save(configFile);
 		} catch (IOException ex) {
-			SignInfo.instance.getLogger().log(Level.SEVERE,
+			InfoSigns.instance.getLogger().log(Level.SEVERE,
 					"Could not save config to " + configFile, ex);
 		}
 	}

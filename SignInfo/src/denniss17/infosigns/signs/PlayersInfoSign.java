@@ -1,4 +1,4 @@
-package denniss17.signinfo.signs;
+package denniss17.infosigns.signs;
 
 
 import org.bukkit.block.Sign;
@@ -8,8 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import denniss17.signinfo.InfoMultiSign;
-import denniss17.signinfo.SignInfo;
+import denniss17.infosigns.InfoMultiSign;
+import denniss17.infosigns.InfoSigns;
 
 public class PlayersInfoSign extends InfoMultiSign implements Listener {
 
@@ -21,7 +21,7 @@ public class PlayersInfoSign extends InfoMultiSign implements Listener {
 	public void updateSign() {
 		this.setLine(0, "Online Players");
 		int i = 1;
-		for(Player player : SignInfo.instance.getServer().getOnlinePlayers()){
+		for(Player player : InfoSigns.instance.getServer().getOnlinePlayers()){
 			try{
 				this.setLine(i, player.getName());
 				i++;
@@ -33,14 +33,14 @@ public class PlayersInfoSign extends InfoMultiSign implements Listener {
 
 	@Override
 	public boolean initialize() {
-		SignInfo.instance.registerListener(this);
+		InfoSigns.instance.registerListener(this);
 		updateSign();
 		return true;
 	}
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){
-		SignInfo.instance.getServer().getScheduler().runTaskLater(SignInfo.instance, new Runnable(){
+		InfoSigns.instance.getServer().getScheduler().runTaskLater(InfoSigns.instance, new Runnable(){
 			@Override
 			public void run() {
 				updateSign();
@@ -55,7 +55,7 @@ public class PlayersInfoSign extends InfoMultiSign implements Listener {
 
 	@Override
 	public boolean destroy() {
-		SignInfo.instance.unregisterListener(this);
+		InfoSigns.instance.unregisterListener(this);
 		return true;
 	}
 

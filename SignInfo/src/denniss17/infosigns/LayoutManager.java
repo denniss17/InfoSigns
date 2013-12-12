@@ -1,4 +1,4 @@
-package denniss17.signinfo;
+package denniss17.infosigns;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +32,8 @@ public class LayoutManager {
 	 */
 	public String[] getLayout(InfoSign infoSign, String subtype){
 		// TODO cache
-		if(SignInfo.signManager.getLayoutOverride(infoSign.getId())!=null){
-			return SignInfo.signManager.getLayoutOverride(infoSign.getId());
+		if(InfoSigns.signManager.getLayoutOverride(infoSign.getId())!=null){
+			return InfoSigns.signManager.getLayoutOverride(infoSign.getId());
 		}
 		String[] result = new String[4];
 		String path = infoSign.getType() + "." + subtype + ".";
@@ -77,7 +77,7 @@ public class LayoutManager {
 	 */
 	protected void reload() {
 		if (configFile == null) {
-			configFile = new File(SignInfo.instance.getDataFolder(), filename);
+			configFile = new File(InfoSigns.instance.getDataFolder(), filename);
 		}
 		config = YamlConfiguration.loadConfiguration(configFile);
 	}
@@ -92,7 +92,7 @@ public class LayoutManager {
 		try {
 			config.save(configFile);
 		} catch (IOException ex) {
-			SignInfo.instance.getLogger().log(Level.SEVERE,
+			InfoSigns.instance.getLogger().log(Level.SEVERE,
 					"Could not save config to " + configFile, ex);
 		}
 	}

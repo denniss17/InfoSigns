@@ -1,11 +1,14 @@
-package denniss17.signinfo;
+package denniss17.infosigns;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -14,14 +17,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import denniss17.signinfo.listeners.SignListener;
-import denniss17.signinfo.signs.OnlinePlayersInfoSign;
-import denniss17.signinfo.signs.PlayersInfoSign;
-import denniss17.signinfo.signs.TimeInfoSign;
-import denniss17.signinfo.utils.Messager;
+import denniss17.infosigns.listeners.SignListener;
+import denniss17.infosigns.signs.MultiLineTestInfoSign;
+import denniss17.infosigns.signs.OnlinePlayersInfoSign;
+import denniss17.infosigns.signs.PlayersInfoSign;
+import denniss17.infosigns.signs.TimeInfoSign;
+import denniss17.infosigns.utils.Messager;
 
-public class SignInfo extends JavaPlugin {
-	public static SignInfo instance;
+public class InfoSigns extends JavaPlugin {
+	public static InfoSigns instance;
 	public static SignManager signManager;
 	public static LayoutManager layoutManager;
 	
@@ -43,7 +47,7 @@ public class SignInfo extends JavaPlugin {
 		
 		// Load addons
 		int count = AddonManager.loadAddons();
-		SignInfo.instance.getLogger().info("Loaded signs from addons: " + count);
+		InfoSigns.instance.getLogger().info("Loaded signs from addons: " + count);
 		
 		// Add basic signtypes
 		addCoreInfoSigns();
@@ -63,6 +67,7 @@ public class SignInfo extends JavaPlugin {
 		infoSignTypes.put("time", TimeInfoSign.class);
 		infoSignTypes.put("online", OnlinePlayersInfoSign.class);
 		infoSignTypes.put("players", PlayersInfoSign.class);
+		infoSignTypes.put("multitest", MultiLineTestInfoSign.class);
 		
 		// Check layouts of basic signstypes
 		if(!layoutManager.exists("online", "default")){
@@ -168,16 +173,72 @@ public class SignInfo extends JavaPlugin {
 	
 	private Sign[][] extendToMultiSign(Sign sign) {
 		org.bukkit.material.Sign signMaterial = (org.bukkit.material.Sign)sign.getData();
-		Block signBlock = sign.getBlock();
+		//Block signBlock = sign.getBlock();
 		
 		BlockFace facing = signMaterial.getFacing();
+		BlockFace right = null;
+		if(facing.equals(BlockFace.NORTH)) 	right=BlockFace.WEST;
+		if(facing.equals(BlockFace.WEST)) 	right=BlockFace.SOUTH;
+		if(facing.equals(BlockFace.SOUTH)) 	right=BlockFace.EAST;
+		if(facing.equals(BlockFace.EAST)) 	right=BlockFace.NORTH;
+		
+		this.getLogger().info("Right of sign = " + right);
+		
+		List<List<Sign>> signs = new ArrayList<List<Sign>>();
+		
+		List<Sign> column;
+		Block other;
 		
 		// First go down untill block is no sign anymore
+		column = getSignColumn(sign);
+		signs.add(column);
 		
+		// Set vars
+		int columnHeight = column.size();
+		int columnIndex = 1;
+		boolean isValid = true;
 		
+		// Go to the right until there are not enough signs anymore
+		while(isValid){
+			other = sign.getBlock().getRelative(right, columnIndex);
+			if(other!=null && other.getType().equals(Material.WALL_SIGN)){
+				column = getSignColumn((Sign) other.getState());
+			}else{
+				column = null;
+			}
+			if(column==null || column.size()<columnHeight){
+				isValid = false;
+			}else{
+				signs.add(column.subList(0, columnHeight));
+				columnIndex++;
+			}
+		}
 		
-		// TODO Auto-generated method stub
-		return null;
+		Sign[][] result = new Sign[signs.size()][signs.get(0).size()];
+		for(int i=0; i<signs.size(); i++){
+			signs.get(i).toArray(result[i]);
+		}
+		return result;
+	}
+
+	private List<Sign> getSignColumn(Sign sign) {
+		List<Sign> result = new ArrayList<Sign>();
+		
+		result.add(sign);
+		
+		Block other = sign.getBlock();
+		boolean isValid = true;
+		while(isValid){
+			other = other.getRelative(BlockFace.DOWN);
+			if(other.getType().equals(Material.WALL_SIGN)){
+				result.add((Sign)other.getState());
+			}else{
+				isValid = false;
+			}
+				
+		}
+		
+		return result;
 	}
 
 	@Override

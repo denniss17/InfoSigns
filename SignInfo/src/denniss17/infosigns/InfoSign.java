@@ -1,10 +1,10 @@
-package denniss17.signinfo;
+package denniss17.infosigns;
 
 import java.util.Map;
 
 import org.bukkit.block.Sign;
 
-import denniss17.signinfo.utils.Messager;
+import denniss17.infosigns.utils.Messager;
 
 public abstract class InfoSign {
 	protected int id;
@@ -55,7 +55,7 @@ public abstract class InfoSign {
 	 * is empty
 	 */
 	public String[] getLayout(String subtype){
-		return SignInfo.layoutManager.getLayout(this, subtype);
+		return InfoSigns.layoutManager.getLayout(this, subtype);
 	}
 
 	/**

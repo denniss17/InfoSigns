@@ -1,4 +1,4 @@
-package denniss17.signinfo;
+package denniss17.infosigns;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -34,7 +34,7 @@ public class AddonManager {
 	@SuppressWarnings("unchecked")
 	public static int loadAddons(){
 		int count = 0;
-		Logger logger = SignInfo.instance.getLogger();
+		Logger logger = InfoSigns.instance.getLogger();
 		File[] addonFiles = listAddons();
 		
 		
@@ -49,7 +49,7 @@ public class AddonManager {
 				// Open addon.yml inside the jar
 				ZipEntry addonYAML = jarFile.getEntry("addon.yml");
 				if(addonYAML == null){
-					SignInfo.instance.getLogger().warning("addon.yml not found in " + file.getName());
+					InfoSigns.instance.getLogger().warning("addon.yml not found in " + file.getName());
 					continue;
 				}
 				InputStream inputStream = jarFile.getInputStream(addonYAML);
@@ -57,12 +57,12 @@ public class AddonManager {
 				
 				// Check addon.yml
 				if(!checkAddonConfiguration(addonConfiguration)){
-					SignInfo.instance.getLogger().warning("addon.yml in " + file.getName() + " is not correct");
+					InfoSigns.instance.getLogger().warning("addon.yml in " + file.getName() + " is not correct");
 					continue;
 				}
 				
 				// Initialize ClassLoader
-				URLClassLoader loader = new URLClassLoader(new URL[] {file.toURI().toURL()} , SignInfo.class.getClassLoader());
+				URLClassLoader loader = new URLClassLoader(new URL[] {file.toURI().toURL()} , InfoSigns.class.getClassLoader());
 				
 				// Load signtypes and classes
 				for(String signtype : addonConfiguration.getKeys(false)){
@@ -78,7 +78,7 @@ public class AddonManager {
 					if(clazz!=null && clazz.getSuperclass().equals(InfoSign.class)){
 						// Success!
 						// 3. Add the sign to the list of signs
-						SignInfo.instance.addInfoSignType(signtype, (Class<? extends InfoSign>) clazz);
+						InfoSigns.instance.addInfoSignType(signtype, (Class<? extends InfoSign>) clazz);
 						// Check if layout is in layouts.yml
 						checkLayouts(addonConfiguration, signtype);	
 						count++;									
@@ -118,7 +118,7 @@ public class AddonManager {
 	 * @return A list of .jar files in the addons folder
 	 */
 	private static File[] listAddons(){
-		File addonsDir = new File(SignInfo.instance.getDataFolder(), AddonManager.addonFolder);
+		File addonsDir = new File(InfoSigns.instance.getDataFolder(), AddonManager.addonFolder);
 		File[] files = addonsDir.listFiles(new jarFilter());
 		return files==null ? new File[0] : files;
 	}
@@ -136,13 +136,13 @@ public class AddonManager {
 	 */
 	private static void checkLayouts(YamlConfiguration addonConfiguration, String signtype) {
 		for(String key : addonConfiguration.getConfigurationSection(signtype + ".layouts").getKeys(false)){
-			if(!SignInfo.layoutManager.exists(signtype, key)){
+			if(!InfoSigns.layoutManager.exists(signtype, key)){
 				// Layout is not in layouts.yml => add it
 				String line0 = addonConfiguration.getString(signtype + ".layouts." + key + ".0");
 				String line1 = addonConfiguration.getString(signtype + ".layouts." + key + ".1");
 				String line2 = addonConfiguration.getString(signtype + ".layouts." + key + ".2");
 				String line3 = addonConfiguration.getString(signtype + ".layouts." + key + ".3");
-				SignInfo.layoutManager.setLayout(signtype, key, line0, line1, line2, line3);
+				InfoSigns.layoutManager.setLayout(signtype, key, line0, line1, line2, line3);
 			}
 		}
 			

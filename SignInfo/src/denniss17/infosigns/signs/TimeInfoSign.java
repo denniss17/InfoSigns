@@ -1,12 +1,12 @@
-package denniss17.signinfo.signs;
+package denniss17.infosigns.signs;
 
 import java.util.HashMap;
 
 import org.bukkit.block.Sign;
 import org.bukkit.scheduler.BukkitTask;
 
-import denniss17.signinfo.SignInfo;
-import denniss17.signinfo.InfoSign;
+import denniss17.infosigns.InfoSign;
+import denniss17.infosigns.InfoSigns;
 
 public class TimeInfoSign extends InfoSign{
 
@@ -39,7 +39,7 @@ public class TimeInfoSign extends InfoSign{
 			interval = 16;
 		}
 		
-		timer = SignInfo.instance.getServer().getScheduler().runTaskTimer(SignInfo.instance, new TimeTimer(), interval, interval);
+		timer = InfoSigns.instance.getServer().getScheduler().runTaskTimer(InfoSigns.instance, new TimeTimer(), interval, interval);
 		return true;
 	}
 

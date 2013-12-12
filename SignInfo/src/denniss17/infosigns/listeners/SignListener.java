@@ -1,4 +1,4 @@
-package denniss17.signinfo.listeners;
+package denniss17.infosigns.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -9,9 +9,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
-import denniss17.signinfo.SignInfo;
-import denniss17.signinfo.InfoSign;
-import denniss17.signinfo.utils.Messager;
+import denniss17.infosigns.InfoSign;
+import denniss17.infosigns.InfoSigns;
+import denniss17.infosigns.utils.Messager;
 
 public class SignListener implements Listener {
 	
@@ -21,7 +21,7 @@ public class SignListener implements Listener {
 	 */
 	@EventHandler(ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event){
-		if(event.getLine(0).equals(SignInfo.instance.getConfig().getString("general.firstline"))){
+		if(event.getLine(0).equals(InfoSigns.instance.getConfig().getString("general.firstline"))){
 			// Ok it is an InfoSign
 			
 			// Get type
@@ -43,24 +43,24 @@ public class SignListener implements Listener {
 			if(arg2.equals("")) arg2 = null;
 			
 			// Create sign
-			InfoSign infoSign = SignInfo.instance.createNewSign(sign, type, arg1, arg2);
+			InfoSign infoSign = InfoSigns.instance.createNewSign(sign, type, arg1, arg2);
 			if(infoSign!=null){
 				// First add it, so it gets an id assigned
-				SignInfo.signManager.addInfoSign(infoSign);
+				InfoSigns.signManager.addInfoSign(infoSign);
 				try{
 					infoSign.initialize();
 				}catch(Exception e){
 					// Something went wrong -> print error and undo addition
-					SignInfo.instance.getLogger().warning("An exception occurred while initializing an InfoSign of type '" + type + "':");
+					InfoSigns.instance.getLogger().warning("An exception occurred while initializing an InfoSign of type '" + type + "':");
 					e.printStackTrace();
-					SignInfo.signManager.removeInfoSign(infoSign);
+					InfoSigns.signManager.removeInfoSign(infoSign);
 					Messager.sendConfig(event.getPlayer(), "sign_creation_failed");
 					event.setCancelled(true);
 					return;
 				}
 				// Successfully initialized -> save it
-				SignInfo.signManager.saveInfoSign(infoSign);
-				SignInfo.instance.getLogger().info("InfoSign of type '" + type + "' created by " + event.getPlayer().getName());
+				InfoSigns.signManager.saveInfoSign(infoSign);
+				InfoSigns.instance.getLogger().info("InfoSign of type '" + type + "' created by " + event.getPlayer().getName());
 				Messager.send(event.getPlayer(), Messager.getConfigMessage("sign_creation_success").replace("{type}", type));
 				event.setCancelled(true);
 			}else{
@@ -81,13 +81,13 @@ public class SignListener implements Listener {
 			// Block
 			Sign signBlock = (Sign)event.getBlock().getState();
 			
-			InfoSign infoSign = SignInfo.signManager.getInfoSign(signBlock);
+			InfoSign infoSign = InfoSigns.signManager.getInfoSign(signBlock);
 			if(infoSign!=null){
 				Block attachedBlock = event.getBlock().getRelative(sign.getAttachedFace());
 				if(attachedBlock.isEmpty()){
 					// Block removed
-					SignInfo.signManager.removeInfoSign(infoSign);
-					SignInfo.instance.getLogger().info("InfoSign " + infoSign.getId() + " removed. (type:" + infoSign.getType() + ")");
+					InfoSigns.signManager.removeInfoSign(infoSign);
+					InfoSigns.instance.getLogger().info("InfoSign " + infoSign.getId() + " removed. (type:" + infoSign.getType() + ")");
 					// Unable to send message to player, as player is not attached to event
 				}
 			}			
@@ -103,11 +103,11 @@ public class SignListener implements Listener {
 		if (event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN) {
 			Sign signBlock = (Sign)event.getBlock().getState();
 			
-			InfoSign infoSign = SignInfo.signManager.getInfoSign(signBlock);
+			InfoSign infoSign = InfoSigns.signManager.getInfoSign(signBlock);
 			if(infoSign!=null){
 				// Block removed
-				SignInfo.signManager.removeInfoSign(infoSign);
-				SignInfo.instance.getLogger().info("InfoSign " + infoSign.getId() + " removed. (type:" + infoSign.getType() + ")");
+				InfoSigns.signManager.removeInfoSign(infoSign);
+				InfoSigns.instance.getLogger().info("InfoSign " + infoSign.getId() + " removed. (type:" + infoSign.getType() + ")");
 				Messager.sendConfig(event.getPlayer(), "sign_broken");
 			}			
 		}		

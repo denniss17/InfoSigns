@@ -1,4 +1,4 @@
-package denniss17.signinfo;
+package denniss17.infosigns;
 
 import org.bukkit.block.Sign;
 
@@ -18,7 +18,7 @@ public abstract class InfoMultiSign extends InfoSign{
 	
 	@Override
 	public void setLine(int index, String string) throws IndexOutOfBoundsException{
-		setLine(index/(signs.length*4), index%(signs.length*4), string);
+		setLine(index/(signs[0].length*4), index%(signs[0].length*4), string);
 	}
 	
 	public void setLine(int x, int y, String string) throws IndexOutOfBoundsException{
@@ -26,9 +26,12 @@ public abstract class InfoMultiSign extends InfoSign{
 		signs[x][y/4].update();
 	}
 	
+	/**
+	 * Returns the top left sign as the main sign. This sign is used to save the InfoSign
+	 */
 	@Override
 	public Sign getSign() {
-		return null;
+		return signs[0][0];
 	}
 	
 }

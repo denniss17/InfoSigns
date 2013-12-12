@@ -1,8 +1,8 @@
-package denniss17.signinfo.addons.test;
+package denniss17.infosigns.addons.test;
 
 import org.bukkit.block.Sign;
 
-import denniss17.signinfo.InfoSign;
+import denniss17.infosigns.InfoSign;
 
 public class TestSign extends InfoSign {
 

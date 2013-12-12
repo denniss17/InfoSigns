@@ -1,10 +1,10 @@
-package denniss17.signinfo.utils;
+package denniss17.infosigns.utils;
 
 import java.util.regex.Pattern;
 
 import org.bukkit.command.CommandSender;
 
-import denniss17.signinfo.SignInfo;
+import denniss17.infosigns.InfoSigns;
 
 public class Messager {
 	protected static Pattern ColorPattern = Pattern.compile("(?i)&([0-9A-F])");
@@ -84,6 +84,6 @@ public class Messager {
 	 * @return The message
 	 */
 	public static String getConfigMessage(String key){
-		return SignInfo.instance.getConfig().getString("messages." + key);
+		return InfoSigns.instance.getConfig().getString("messages." + key);
 	}
 }

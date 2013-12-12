@@ -1,25 +1,25 @@
-name: SignInfo
-main: denniss17.signinfo.SignInfo
+name: InfoSigns
+main: denniss17.infosigns.InfoSigns
 version: 0.1.0
 author: Denniss17
-description: Create Info Signs
+description: Create info signs
 softdepend: [Vault]
 commands:
-   signinfo:
-      description: Main SignInfo command
+   infosigns:
+      description: Main InfoSigns command
       usage: /<command>
-      permission: signinfo.signinfo
-      aliases: [si]
+      permission: infosigns.infosigns
+      aliases: [is]
 permissions:
-   signinfo.create.*:
+   infosigns.create.*:
       description: Permission to create all sign types.
       default: op
-   signinfo.signinfo:
+   infosigns.infosigns:
       description: Permission to use the command
       default: op
-   signinfo.*:
+   infosigns.*:
       description: All permissions
       default: op
       children:
-         signinfo.signinfo: true
-         signinfo.create.*: true
+         infosigns.infosigns: true
+         infosigns.create.*: true
