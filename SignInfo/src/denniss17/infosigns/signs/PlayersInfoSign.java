@@ -29,6 +29,16 @@ public class PlayersInfoSign extends InfoMultiSign implements Listener {
 				// Sign is too small
 			}
 		}
+		
+		// Clear other lines
+		try{
+			while(true){
+				this.setLine(i, "");
+				i++;
+			}			
+		}catch(IndexOutOfBoundsException e){
+			// All lines cleared
+		}
 	}
 
 	@Override
