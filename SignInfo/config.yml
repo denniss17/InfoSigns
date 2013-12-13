@@ -1,7 +1,0 @@
-general:
-  firstline: '[InfoSign]'
-messages:
-  sign_creation_success: '&0[&9InfoSigns&0] &7You created an info sign of type &9{type}'
-  sign_creation_type_unknown: '&0[&9InfoSigns&0] &cUnknown info sign type'
-  sign_creation_failed: '&0[&9InfoSigns&0] &cSomething went wrong on creating the info sign'
-  sign_broken: '&0[&9InfoSigns&0] &7Info sign removed'
