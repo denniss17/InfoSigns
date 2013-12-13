@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -15,11 +19,12 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import denniss17.infosigns.listeners.SignListener;
 import denniss17.infosigns.signs.MultiLineTestInfoSign;
-import denniss17.infosigns.signs.OnlinePlayersInfoSign;
+import denniss17.infosigns.signs.OnlineInfoSign;
 import denniss17.infosigns.signs.PlayersInfoSign;
 import denniss17.infosigns.signs.TimeInfoSign;
 import denniss17.infosigns.utils.Messager;
@@ -28,6 +33,10 @@ public class InfoSigns extends JavaPlugin {
 	public static InfoSigns instance;
 	public static SignManager signManager;
 	public static LayoutManager layoutManager;
+	
+	public static Economy economy;
+	public static Permission permission;
+	public static Chat chat;
 	
 	private Map<String, Class<? extends InfoSign>> infoSignTypes;
 	
@@ -47,10 +56,19 @@ public class InfoSigns extends JavaPlugin {
 		
 		// Load addons
 		int count = AddonManager.loadAddons();
-		InfoSigns.instance.getLogger().info("Loaded signs from addons: " + count);
+		getLogger().info("Loaded signs from addons: " + count);
 		
 		// Add basic signtypes
 		addCoreInfoSigns();
+		
+		// Check Vault
+		if(isVaultEnabled()){
+			if(!loadEconomy()) 		getLogger().info("Economy plugin not found. Some signs may be disabled");
+			if(!loadPermission()) 	getLogger().info("Permission plugin not found. Some signs may be disabled");
+			if(!loadChat()) 		getLogger().info("Chat plugin not found. Some signs may be disabled");
+		}else{
+			getLogger().info("Vault not found. Some signs may be disabled");
+		}
 		
 		// Load all currently existing InfoSigns and get them running
 		signManager.loadInfoSigns();
@@ -65,7 +83,7 @@ public class InfoSigns extends JavaPlugin {
 	
 	private void addCoreInfoSigns() {
 		infoSignTypes.put("time", TimeInfoSign.class);
-		infoSignTypes.put("online", OnlinePlayersInfoSign.class);
+		infoSignTypes.put("online", OnlineInfoSign.class);
 		infoSignTypes.put("players", PlayersInfoSign.class);
 		infoSignTypes.put("multitest", MultiLineTestInfoSign.class);
 		
@@ -79,6 +97,40 @@ public class InfoSigns extends JavaPlugin {
 		if(!layoutManager.exists("time", "default")){
 			layoutManager.setLayout("time", "default", "[&9InfoSign&r]", "Time:", "{time}", null);
 		}
+	}
+	
+	public boolean isVaultEnabled(){
+		return getServer().getPluginManager().getPlugin("Vault")!=null;
+	}
+	
+	/** Load the economy via Vault */
+	private boolean loadEconomy(){
+		RegisteredServiceProvider<Economy> provider = 
+				getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+		if (provider != null) {
+			economy = provider.getProvider();
+		}		
+		return (economy != null);
+	}
+	
+	/** Load the permission via Vault */
+	private boolean loadPermission(){
+		RegisteredServiceProvider<Permission> provider = 
+				getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+		if (provider != null) {
+			permission = provider.getProvider();
+		}		
+		return (permission != null);
+	}
+	
+	/** Load the chat via Vault */
+	private boolean loadChat(){
+		RegisteredServiceProvider<Chat> provider = 
+				getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
+		if (provider != null) {
+			chat = provider.getProvider();
+		}		
+		return (chat != null);
 	}
 
 	public Map<String, Class<? extends InfoSign>> getInfoSignTypes(){
