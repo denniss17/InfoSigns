@@ -3,20 +3,38 @@ package denniss17.infosigns;
 import java.util.Map;
 
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 
 import denniss17.infosigns.utils.Messager;
 
 public abstract class InfoSign {
-	protected int id;
+	public static final String SUBTYPE_DEFAULT = "default";
+
+	/** The id of this sign, used internally for IO purposes. Do not change */
+	private int id;
+	
+	/** The main sign of this InfoSign. If this InfoSign consists of multiple signs,
+	 * this is null */
 	protected Sign sign;
+	
+	/** The type of this InfoSign */
 	protected String type;
+	
+	/** The subtype of this InfoSign. Used to distinguish between layouts. */
+	protected String subtype;
+	
+	/** The first argument passed to the sign (line 2) */
 	protected String arg1;
+	/** The second argument passed to the sign (line 3) */
 	protected String arg2;
+	
+	/** Some optional data of this sign */
 	protected Map<String, Object> data;
 
 	public InfoSign(Sign sign, String type, String arg1, String arg2){
 		this.sign = sign;
 		this.type = type;
+		this.subtype = SUBTYPE_DEFAULT;
 		this.arg1 = arg1;
 		this.arg2 = arg2;
 	}
@@ -28,7 +46,7 @@ public abstract class InfoSign {
 	
 	/**
 	 * Called when the sign is created and should start updating its display
-	 * Use this function to register listeners and update the sign for the first time
+	 * Use this function to register listeners, determine subtype and update the sign for the first time
 	 * @return true if successfully initialized, false otherwise
 	 */
 	public abstract boolean initialize();
@@ -40,22 +58,68 @@ public abstract class InfoSign {
 	 */
 	public abstract boolean destroy();
 	
+	public int getId() {
+		return id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getSubtype(){
+		return subtype;
+	}
+
+	public Sign getSign() {
+		return sign;
+	}
+
+	public String getFirstArgument() {
+		return arg1;
+	}
+
+	public String getSecondArgument() {
+		return arg2;
+	}
+
 	/**
-	 * Returns the default layout for this sign type (from layouts.yml)
+	 * Returns the layout for this sign type (from layouts.yml) in the subtype of this sign.
 	 * @return An String array of length 4. Elements could be null, which indicates the line
 	 * is empty
 	 */
 	public String[] getLayout(){
-		return getLayout("default");
+		return InfoSigns.layoutManager.getLayout(this);
 	}
 	
-	/**
-	 * Returns the layout for this sign type (from layouts.yml) in the specified subtype.
-	 * @return An String array of length 4. Elements could be null, which indicates the line
-	 * is empty
-	 */
-	public String[] getLayout(String subtype){
-		return InfoSigns.layoutManager.getLayout(this, subtype);
+	public ConfigurationSection getLayoutConfig(){
+		return InfoSigns.layoutManager.getLayoutConfig(this);
+	}
+
+	public Map<String, Object> getData(){
+		return data;
+	}
+	
+	/** Set the data of this sign*/
+	public void setData(Map<String, Object> options){
+		this.data = options;
+	}
+	
+	/** Save this sign, including the data, to the hard disk */
+	public void save(){
+		InfoSigns.signManager.saveInfoSign(this);
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public boolean isInfoMultiSign(){
+		return sign==null;
+	}
+
+	public void setLine(int index, String string) throws IndexOutOfBoundsException {
+		sign.setLine(index, string);
+		sign.update();		
 	}
 
 	/**
@@ -68,8 +132,8 @@ public abstract class InfoSign {
 	 * Method call: parseLayout("default", "count", "10", "max", "20")<br>
 	 * Result: "10/20"
 	 */
-	protected void parseLayout(String subtype, String... args){
-		String[] output = getLayout(subtype);
+	protected void parseLayout(String... args){
+		String[] output = getLayout();
 		// Replace tags
 		for(int i=0; i<args.length-1; i+=2){
 			for(int j=0; j<4; j++){
@@ -87,42 +151,7 @@ public abstract class InfoSign {
 		// And update the sign
 		sign.update();
 	}
-	
-	public Sign getSign() {
-		return sign;
-	}
 
-	public String getType() {
-		return type;
-	}
-
-	public String getFirstArgument() {
-		return arg1;
-	}
 	
-	public String getSecondArgument() {
-		return arg2;
-	}
-	
-	public Map<String, Object> getData(){
-		return data;
-	}
-	
-	public void setData(Map<String, Object> options){
-		this.data = options;
-	}
-
-	public int getId() {
-		return id;
-	}
-	
-	public boolean isInfoMultiSign(){
-		return sign==null;
-	}
-
-	public void setLine(int index, String string) throws IndexOutOfBoundsException {
-		sign.setLine(index, string);
-		sign.update();		
-	}
 	
 }

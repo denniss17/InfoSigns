@@ -14,6 +14,7 @@ import denniss17.infosigns.InfoSigns;
 public class PlayersInfoSign extends InfoMultiSign implements Listener {
 
 	private static final String CONSTRAINT_PERMISSION = "permission";
+	private static final Object CONSTRAINT_GROUP = "group";
 
 	public PlayersInfoSign(Sign[][] signs, String type, String arg1, String arg2) {
 		super(signs, type, arg1, arg2);
@@ -27,24 +28,31 @@ public class PlayersInfoSign extends InfoMultiSign implements Listener {
 		}
 	}
 
+	private boolean isInGroup(Player player, String group) {
+		if(InfoSigns.permission!=null){
+			return InfoSigns.permission.playerInGroup(player, group);
+		}
+		return false;
+	}
+
 	@Override
 	public void updateSign() {
-		this.setLine(0, "Online Players");
-		int i = 1;
+		this.setLine(0, getLayout()[0]);
+		this.setLine(1, getLayout()[1]);
+		String namePrefix = this.getLayoutConfig().getString("namecolor");
+		int i = 2;
 		for(Player player : InfoSigns.instance.getServer().getOnlinePlayers()){
-			if(		arg1!=null && 
-					arg1.equals(CONSTRAINT_PERMISSION) &&
-					!hasPermission(player, arg2) ){
-				// Do not display
-			}else{
+			if(	arg1==null ||
+				(arg1.equals(CONSTRAINT_PERMISSION) && hasPermission(player, arg2)) ||
+				(arg1.equals(CONSTRAINT_GROUP) && isInGroup(player, arg2))
+				){
 				try{
-					this.setLine(i, player.getName());
+					this.setLine(i, namePrefix + player.getName());
 					i++;
 				}catch(IndexOutOfBoundsException e){
 					// Sign is too small
 				}
-			}
-			
+			}			
 		}
 		
 		// Clear other lines

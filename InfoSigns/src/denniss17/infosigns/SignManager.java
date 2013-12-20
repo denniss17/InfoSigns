@@ -11,12 +11,14 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 
 public class SignManager {
+	private static final String FILENAME = "signs.yml";
 	private FileConfiguration config = null;
 	private File configFile = null;
 	
@@ -27,13 +29,13 @@ public class SignManager {
 	}
 
 	public void addInfoSign(InfoSign infoSign) {
-		if(infoSign.id == 0) infoSign.id = getNextId();
-		infoSigns.put(infoSign.id, infoSign);		
+		if(infoSign.getId() == 0) infoSign.setId(getNextId());
+		infoSigns.put(infoSign.getId(), infoSign);		
 	}
 
 	public void removeInfoSign(InfoSign infoSign) {
 		infoSign.destroy();
-		get().set(String.valueOf(infoSign.id), null);
+		get().set(String.valueOf(infoSign.getId()), null);
 		save();
 	}
 
@@ -60,6 +62,10 @@ public class SignManager {
 		InfoSigns.instance.getLogger().info(infoSigns.size() + " InfoSigns loaded");
 	}
 	
+	public boolean hasLayoutOverride(int id) {
+		return get().contains(id + ".layout");
+	}
+
 	public String[] getLayoutOverride(int id){
 		if(get().contains(id + ".layout")){
 			String[] result = new String[4];
@@ -69,6 +75,13 @@ public class SignManager {
 			result[2] = get().getString(path+"2");
 			result[3] = get().getString(path+"3");
 			return result;
+		}
+		return null;
+	}
+
+	public ConfigurationSection getLayoutConfigOverride(int id) {
+		if(get().contains(id + ".layout")){
+			return get().getConfigurationSection(id + ".layout");
 		}
 		return null;
 	}
@@ -90,7 +103,7 @@ public class SignManager {
 		InfoSign infoSign = InfoSigns.instance.createNewSign(sign, type, arg1, arg2);
 		
 		if(infoSign!=null){
-			infoSign.id = id;
+			infoSign.setId(id);
 			if(data!=null){
 				infoSign.setData(data);
 			}
@@ -102,8 +115,8 @@ public class SignManager {
 	}
 
 	public void saveInfoSign(InfoSign signInfoSign) {
-		if(signInfoSign.id ==0) signInfoSign.id = getNextId();
-		int id = signInfoSign.id;
+		if(signInfoSign.getId() ==0) signInfoSign.setId(getNextId());
+		int id = signInfoSign.getId();
 		get().set(id + ".sign", signToString(signInfoSign.getSign()));
 		get().set(id + ".type", signInfoSign.getType());
 		get().set(id + ".arg1", signInfoSign.getFirstArgument());
@@ -173,7 +186,7 @@ public class SignManager {
 	
 	protected void reload() {
 		if (configFile == null) {
-			configFile = new File(InfoSigns.instance.getDataFolder(), "signs.yml");
+			configFile = new File(InfoSigns.instance.getDataFolder(), FILENAME);
 		}
 		config = YamlConfiguration.loadConfiguration(configFile);
 	}

@@ -11,6 +11,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class AddonManager {
@@ -78,7 +79,7 @@ public class AddonManager {
 					if(clazz!=null && clazz.getSuperclass().equals(InfoSign.class)){
 						// Success!
 						// 3. Add the sign to the list of signs
-						InfoSigns.instance.addInfoSignType(signtype, (Class<? extends InfoSign>) clazz);
+						InfoSigns.instance.registerInfoSignType(signtype, (Class<? extends InfoSign>) clazz);
 						// Check if layout is in layouts.yml
 						checkLayouts(addonConfiguration, signtype);	
 						count++;									
@@ -135,18 +136,12 @@ public class AddonManager {
 	 * @param signtype The type of the sign
 	 */
 	private static void checkLayouts(YamlConfiguration addonConfiguration, String signtype) {
-		for(String key : addonConfiguration.getConfigurationSection(signtype + ".layouts").getKeys(false)){
-			if(!InfoSigns.layoutManager.exists(signtype, key)){
-				// Layout is not in layouts.yml => add it
-				String line0 = addonConfiguration.getString(signtype + ".layouts." + key + ".0");
-				String line1 = addonConfiguration.getString(signtype + ".layouts." + key + ".1");
-				String line2 = addonConfiguration.getString(signtype + ".layouts." + key + ".2");
-				String line3 = addonConfiguration.getString(signtype + ".layouts." + key + ".3");
-				InfoSigns.layoutManager.setLayout(signtype, key, line0, line1, line2, line3);
+		for(String subtype : addonConfiguration.getConfigurationSection(signtype + ".layouts").getKeys(false)){
+			ConfigurationSection config = InfoSigns.layoutManager.getLayoutConfig(signtype, subtype);
+			for(String key : addonConfiguration.getConfigurationSection(signtype + ".layouts." + subtype).getKeys(false)){
+				if(!config.contains(key)) config.set(key, addonConfiguration.get(signtype + ".layouts." + subtype + "." + key));
 			}
 		}
-			
-			
 	}
 	
 }

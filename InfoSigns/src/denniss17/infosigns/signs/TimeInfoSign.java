@@ -26,7 +26,7 @@ public class TimeInfoSign extends InfoSign{
 
 	@Override
 	public void updateSign() {
-		parseLayout("default", "time", ticksToHuman((int) sign.getWorld().getTime()));
+		parseLayout("time", ticksToHuman((int) sign.getWorld().getTime()));
 	}
 
 	@Override

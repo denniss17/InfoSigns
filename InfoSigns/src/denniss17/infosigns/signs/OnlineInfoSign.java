@@ -14,20 +14,22 @@ import denniss17.infosigns.InfoSigns;
 
 public class OnlineInfoSign extends InfoSign implements Listener {
 
+	private static final String SUBTYPE_WORLD = "world";
+
 	public OnlineInfoSign(Sign sign, String type, String arg1, String arg2) {
 		super(sign, type, arg1, arg2);
 	}
 
 	@Override
 	public void updateSign() {
-		if(arg1!=null){
+		if(getSubtype().equals(SUBTYPE_WORLD)){
 			World world = InfoSigns.instance.getServer().getWorld(arg1);
-			parseLayout("world", 
-					"world", arg2==null ? arg1 : arg2, 
-					"count",  world==null ? "Error" : String.valueOf(world.getPlayers().size())
-					);
+			parseLayout( 
+				"world", arg2==null ? arg1 : arg2, 
+				"count",  world==null ? "Error" : String.valueOf(world.getPlayers().size())
+			);
 		}else{
-			parseLayout("default", 
+			parseLayout( 
 				"count", String.valueOf(InfoSigns.instance.getServer().getOnlinePlayers().length),
 				"max", String.valueOf(InfoSigns.instance.getServer().getMaxPlayers())
 			);
@@ -36,6 +38,12 @@ public class OnlineInfoSign extends InfoSign implements Listener {
 
 	@Override
 	public boolean initialize() {
+		if(arg1!=null){
+			subtype = SUBTYPE_WORLD;
+		}else{
+			subtype = SUBTYPE_DEFAULT;
+		}
+		
 		InfoSigns.instance.registerListener(this);
 		updateSign();
 		return true;
@@ -62,7 +70,7 @@ public class OnlineInfoSign extends InfoSign implements Listener {
 	
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event){
-		if(arg1!=null) updateSign();
+		if(getSubtype().equals(SUBTYPE_WORLD)) updateSign();
 	}
 
 	@Override

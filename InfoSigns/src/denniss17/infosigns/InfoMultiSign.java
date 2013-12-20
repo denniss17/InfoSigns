@@ -12,7 +12,7 @@ public abstract class InfoMultiSign extends InfoSign{
 	}
 	
 	@Override
-	protected void parseLayout(String subtype, String... args){
+	protected void parseLayout(String... args){
 		return;
 	}
 	
@@ -22,7 +22,7 @@ public abstract class InfoMultiSign extends InfoSign{
 	}
 	
 	public void setLine(int x, int y, String string) throws IndexOutOfBoundsException{
-		signs[x][y/4].setLine(y%4, string);
+		signs[x][y/4].setLine(y%4, string==null ? "" : string);
 		signs[x][y/4].update();
 	}
 	

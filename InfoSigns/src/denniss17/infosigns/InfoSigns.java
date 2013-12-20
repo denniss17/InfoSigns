@@ -18,6 +18,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -97,6 +98,13 @@ public class InfoSigns extends JavaPlugin {
 		if(!layoutManager.exists("time", "default")){
 			layoutManager.setLayout("time", "default", "[&9InfoSign&r]", "Time:", "{time}", null);
 		}
+		
+		if(!layoutManager.exists("players", "default")){
+			ConfigurationSection config = layoutManager.getLayoutConfig("players", "default");
+			config.set("0", "[&9InfoSign&r]");
+			config.set("1", "&fOnline players");
+			config.set("namecolor", "&0");
+		}
 	}
 	
 	public boolean isVaultEnabled(){
@@ -133,18 +141,35 @@ public class InfoSigns extends JavaPlugin {
 		return (chat != null);
 	}
 
+	/**
+	 * Get all registered InfoSign types
+	 * @return A mapping from type to class
+	 */
 	public Map<String, Class<? extends InfoSign>> getInfoSignTypes(){
 		return infoSignTypes;
 	}
 	
-	public void addInfoSignType(String signtype, Class<? extends InfoSign> clazz) {
+	/**
+	 * Register a new InfoSignType
+	 * @param signtype The name of this signtype
+	 * @param clazz The class of this InfoSign, has to extend InfoSign (or InfoMultiSign)
+	 */
+	public void registerInfoSignType(String signtype, Class<? extends InfoSign> clazz) {
 		infoSignTypes.put(signtype, clazz);		
 	}
 
+	/**
+	 * Register this listener for events
+	 * @param listener
+	 */
 	public void registerListener(Listener listener){
 		this.getServer().getPluginManager().registerEvents(listener, this);
 	}
 	
+	/**
+	 * Unregister this listener from events
+	 * @param listener
+	 */
 	public void unregisterListener(Listener listener) {
 		// TODO Auto-generated method stub
 	}
