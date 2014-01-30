@@ -255,7 +255,6 @@ public class InfoSigns extends JavaPlugin {
 	
 	private Sign[][] extendToMultiSign(Sign sign) {
 		org.bukkit.material.Sign signMaterial = (org.bukkit.material.Sign)sign.getData();
-		//Block signBlock = sign.getBlock();
 		
 		BlockFace facing = signMaterial.getFacing();
 		BlockFace right = null;
@@ -263,8 +262,6 @@ public class InfoSigns extends JavaPlugin {
 		if(facing.equals(BlockFace.WEST)) 	right=BlockFace.SOUTH;
 		if(facing.equals(BlockFace.SOUTH)) 	right=BlockFace.EAST;
 		if(facing.equals(BlockFace.EAST)) 	right=BlockFace.NORTH;
-		
-		this.getLogger().info("Right of sign = " + right);
 		
 		List<List<Sign>> signs = new ArrayList<List<Sign>>();
 		

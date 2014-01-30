@@ -1,6 +1,6 @@
 name: InfoSigns
 main: denniss17.infosigns.InfoSigns
-version: 0.1.0
+version: 0.1.1
 author: Denniss17
 description: Create info signs
 softdepend: [Vault]

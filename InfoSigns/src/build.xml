@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="InfoSigns" default="makejars" basedir="..">
+  <target name ="makejars" description="Create all jars">
+    <jar jarfile="InfoSigns.jar">
+    	<fileset dir=".">
+    		<include name="plugin.yml"/>
+    		<include name="config.yml"/>
+    	</fileset>
+    	<fileset dir="bin">
+    		<include name="**/*.class"/>
+    		<exclude name="denniss17/infosigns/addons/**"/>
+    	</fileset>
+    </jar>
+  </target>
+</project>

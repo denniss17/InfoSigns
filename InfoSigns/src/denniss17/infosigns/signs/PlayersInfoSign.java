@@ -37,8 +37,8 @@ public class PlayersInfoSign extends InfoMultiSign implements Listener {
 
 	@Override
 	public void updateSign() {
-		this.setLine(0, getLayout().getConfig().getString("0"));
-		this.setLine(1, getLayout().getConfig().getString("1"));
+		this.setLineWithStyle(0, getLayout().getConfig().getString("0"));
+		this.setLineWithStyle(1, getLayout().getConfig().getString("1"));
 		String namePrefix = this.getLayout().getConfig().getString("namecolor");
 		int i = 2;
 		for(Player player : InfoSigns.instance.getServer().getOnlinePlayers()){
@@ -47,7 +47,7 @@ public class PlayersInfoSign extends InfoMultiSign implements Listener {
 				(arg1.equals(CONSTRAINT_GROUP) && isInGroup(player, arg2))
 				){
 				try{
-					this.setLine(i, namePrefix + player.getName());
+					this.setLineWithStyle(i, namePrefix + player.getName());
 					i++;
 				}catch(IndexOutOfBoundsException e){
 					// Sign is too small

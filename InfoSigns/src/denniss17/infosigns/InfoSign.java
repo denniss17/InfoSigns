@@ -117,6 +117,10 @@ public abstract class InfoSign {
 		sign.setLine(index, string);
 		sign.update();		
 	}
+	
+	public void setLineWithStyle(int index, String string) throws IndexOutOfBoundsException {
+		this.setLine(index, Messager.setTotalStyle(string));	
+	}
 
 	/**
 	 * Parse the layout of the given subtype (from layouts.yml) with the given arguments

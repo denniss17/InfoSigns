@@ -101,7 +101,7 @@ public class LayoutManager {
 	
 	public ConfigurationSection getDefaultLayout(String type, String subtype) {
 		String path = type + "." + subtype;
-		return get().getConfigurationSection(path);
+		return get().contains(path) ? get().getConfigurationSection(path) : get().createSection(path);
 	}
 	
 	public void setDefaultLines(String type, String subtype, String line0, String line1, String line2, String line3){
