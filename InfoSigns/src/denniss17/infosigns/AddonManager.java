@@ -137,9 +137,12 @@ public class AddonManager {
 	 */
 	private static void checkLayouts(YamlConfiguration addonConfiguration, String signtype) {
 		for(String subtype : addonConfiguration.getConfigurationSection(signtype + ".layouts").getKeys(false)){
-			ConfigurationSection config = InfoSigns.layoutManager.getLayoutConfig(signtype, subtype);
+			ConfigurationSection config = InfoSigns.layoutManager.getDefaultLayout(signtype, subtype);
 			for(String key : addonConfiguration.getConfigurationSection(signtype + ".layouts." + subtype).getKeys(false)){
-				if(!config.contains(key)) config.set(key, addonConfiguration.get(signtype + ".layouts." + subtype + "." + key));
+				if(!config.contains(key)){
+					config.set(key, addonConfiguration.get(signtype + ".layouts." + subtype + "." + key));
+					InfoSigns.layoutManager.saveConfig();
+				}
 			}
 		}
 	}

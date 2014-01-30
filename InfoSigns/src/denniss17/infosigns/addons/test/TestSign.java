@@ -12,7 +12,7 @@ public class TestSign extends InfoSign {
 
 	@Override
 	public void updateSign() {
-		this.parseLayout("default");
+		this.parseLines("default");
 	}
 
 	@Override

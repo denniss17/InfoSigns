@@ -24,12 +24,12 @@ public class OnlineInfoSign extends InfoSign implements Listener {
 	public void updateSign() {
 		if(getSubtype().equals(SUBTYPE_WORLD)){
 			World world = InfoSigns.instance.getServer().getWorld(arg1);
-			parseLayout( 
+			parseLines( 
 				"world", arg2==null ? arg1 : arg2, 
 				"count",  world==null ? "Error" : String.valueOf(world.getPlayers().size())
 			);
 		}else{
-			parseLayout( 
+			parseLines( 
 				"count", String.valueOf(InfoSigns.instance.getServer().getOnlinePlayers().length),
 				"max", String.valueOf(InfoSigns.instance.getServer().getMaxPlayers())
 			);

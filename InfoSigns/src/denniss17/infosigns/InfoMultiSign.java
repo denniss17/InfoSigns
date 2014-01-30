@@ -12,7 +12,7 @@ public abstract class InfoMultiSign extends InfoSign{
 	}
 	
 	@Override
-	protected void parseLayout(String... args){
+	protected void parseLines(String... args){
 		return;
 	}
 	

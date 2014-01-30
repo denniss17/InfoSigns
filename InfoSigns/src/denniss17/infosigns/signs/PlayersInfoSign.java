@@ -37,9 +37,9 @@ public class PlayersInfoSign extends InfoMultiSign implements Listener {
 
 	@Override
 	public void updateSign() {
-		this.setLine(0, getLayout()[0]);
-		this.setLine(1, getLayout()[1]);
-		String namePrefix = this.getLayoutConfig().getString("namecolor");
+		this.setLine(0, getLayout().getConfig().getString("0"));
+		this.setLine(1, getLayout().getConfig().getString("1"));
+		String namePrefix = this.getLayout().getConfig().getString("namecolor");
 		int i = 2;
 		for(Player player : InfoSigns.instance.getServer().getOnlinePlayers()){
 			if(	arg1==null ||

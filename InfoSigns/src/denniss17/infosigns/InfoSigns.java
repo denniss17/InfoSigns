@@ -19,6 +19,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -90,20 +91,24 @@ public class InfoSigns extends JavaPlugin {
 		
 		// Check layouts of basic signstypes
 		if(!layoutManager.exists("online", "default")){
-			layoutManager.setLayout("online", "default", "[&9InfoSign&r]", "Online Players:", null, "{count}/{max}");
+			layoutManager.setDefaultLines("online", "default", "[&9InfoSign&r]", "Online Players:", null, "{count}/{max}");
+			layoutManager.saveConfig();
 		}
 		if(!layoutManager.exists("online", "world")){
-			layoutManager.setLayout("online", "world", "[&9InfoSign&r]", "Online Players:", "{world}", "{count}");
+			layoutManager.setDefaultLines("online", "world", "[&9InfoSign&r]", "Online Players:", "{world}", "{count}");
+			layoutManager.saveConfig();
 		}
 		if(!layoutManager.exists("time", "default")){
-			layoutManager.setLayout("time", "default", "[&9InfoSign&r]", "Time:", "{time}", null);
+			layoutManager.setDefaultLines("time", "default", "[&9InfoSign&r]", "Time:", "{time}", null);
+			layoutManager.saveConfig();
 		}
 		
 		if(!layoutManager.exists("players", "default")){
-			ConfigurationSection config = layoutManager.getLayoutConfig("players", "default");
+			ConfigurationSection config = layoutManager.getDefaultLayout("players", "default");
 			config.set("0", "[&9InfoSign&r]");
 			config.set("1", "&fOnline players");
 			config.set("namecolor", "&0");
+			layoutManager.saveConfig();
 		}
 	}
 	
@@ -171,7 +176,7 @@ public class InfoSigns extends JavaPlugin {
 	 * @param listener
 	 */
 	public void unregisterListener(Listener listener) {
-		// TODO Auto-generated method stub
+		HandlerList.unregisterAll(listener);
 	}
 
 	/**

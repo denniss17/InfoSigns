@@ -3,7 +3,6 @@ package denniss17.infosigns;
 import java.util.Map;
 
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.ConfigurationSection;
 
 import denniss17.infosigns.utils.Messager;
 
@@ -30,6 +29,8 @@ public abstract class InfoSign {
 	
 	/** Some optional data of this sign */
 	protected Map<String, Object> data;
+
+	private LayoutConfig layout;
 
 	public InfoSign(Sign sign, String type, String arg1, String arg2){
 		this.sign = sign;
@@ -83,16 +84,11 @@ public abstract class InfoSign {
 	}
 
 	/**
-	 * Returns the layout for this sign type (from layouts.yml) in the subtype of this sign.
-	 * @return An String array of length 4. Elements could be null, which indicates the line
-	 * is empty
+	 * Returns the LayoutConfig for this sign
 	 */
-	public String[] getLayout(){
-		return InfoSigns.layoutManager.getLayout(this);
-	}
-	
-	public ConfigurationSection getLayoutConfig(){
-		return InfoSigns.layoutManager.getLayoutConfig(this);
+	public LayoutConfig getLayout(){
+		if(layout==null) layout = InfoSigns.layoutManager.getLayout(this);
+		return this.layout;
 	}
 
 	public Map<String, Object> getData(){
@@ -114,7 +110,7 @@ public abstract class InfoSign {
 	}
 	
 	public boolean isInfoMultiSign(){
-		return sign==null;
+		return (this instanceof InfoMultiSign);
 	}
 
 	public void setLine(int index, String string) throws IndexOutOfBoundsException {
@@ -132,8 +128,8 @@ public abstract class InfoSign {
 	 * Method call: parseLayout("default", "count", "10", "max", "20")<br>
 	 * Result: "10/20"
 	 */
-	protected void parseLayout(String... args){
-		String[] output = getLayout();
+	protected void parseLines(String... args){
+		String[] output = getLayout().getLines();
 		// Replace tags
 		for(int i=0; i<args.length-1; i+=2){
 			for(int j=0; j<4; j++){
